@@ -1,8 +1,9 @@
 package main
  
-import _ "embed"
 import (
+  "bytes"
   "fmt"
+  "embed"
   "encoding/gob"
   "os"
   "strconv"
@@ -46,7 +47,7 @@ Bible used is World English Bible, which is in the public domain. It is a
 trademark of <https://www.ebible.org/>.`
 const VERSION = "VERSION: 1.0.0"
 //go:embed bible.dat
-var BIBEL []byte
+var BIBEL embed.FS
 var BIBLE []Book
 
 type Book struct {
@@ -54,19 +55,16 @@ type Book struct {
   Body []string
 }
 
-func decodeBible(encBooks []byte) ([]Book, error) {
+func decodeBible(encBooks embed.FS) ([]Book, error) {
   var decBooks []Book
-  if file, err0 := os.Open(BIBLE_FILE); err0 != nil {
-    fmt.Println("Opening file error:", err0)
-    return nil, err0
-  } else {
-    defer file.Close()
-    dec := gob.NewDecoder(file)
-    err1 := dec.Decode(&decBooks)
-    if err1 != nil {
-      fmt.Println("Decoding error:", err1)
-      return nil, err1
-    }
+  bibleDat, err0 := BIBEL.ReadFile("bible.dat")
+  if err0 != nil {
+    fmt.Println(err0)
+  }
+  dec := gob.NewDecoder(bytes.NewReader(bibleDat))
+  err1 := dec.Decode(&decBooks)
+  if err1 != nil {
+    fmt.Println(err1)
   }
   return decBooks, nil
 }
@@ -214,9 +212,8 @@ func main() {
   var err error
   if BIBLE, err = decodeBible(BIBEL); err != nil {
     fmt.Println("Bible embedding error:", err)
+  } 
   // If successful, it is good
-  } else {
-    parseFlags(os.Args[1:])
-    parseArguments(os.Args[1:])
-  }
+  parseFlags(os.Args[1:])
+  parseArguments(os.Args[1:])
 }
