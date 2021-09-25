@@ -1,11 +1,12 @@
 ![bibel](/logo.png "bibel")
+![GitHub](https://img.shields.io/github/license/maxwelljens/bibel?label=Licence) ![GitHub last commit](https://img.shields.io/github/last-commit/maxwelljens/bibel?label=Last%20Commit)
 [![asciicast](https://asciinema.org/a/438002.svg)](https://asciinema.org/a/438002)
 
 ## What is bibel?
 
-`bibel` is a command line interface (CLI) utility for the Bible. Its primary use is for quick reference from the
-command line and piping into other programs, as reading the whole Bible by itself in the command line is not very
-comfortable.
+`bibel` (*bee•bell*) is a command line interface (CLI) utility for the Bible. Its primary use is for quick reference
+from the command line and piping into other programs, as reading the whole Bible by itself in the command line is not
+very comfortable.
 
 ## How do I use bibel?
 
@@ -35,6 +36,17 @@ everything, although `bibel john X Y` will match both *Book of John* and letters
 and *3 John*) as a consequence.
 
 Names of books used are their standard short names, (e.g. *1 Maccabees* instead of *The First Book of Maccabees*)
+
+## How do I build bibel?
+
+`bibel` is written in Go, and has no external dependencies. Program in `bibel_compile.go` compiles the World English
+Bible text files in `/web_bible` into a `bible.dat` binary that then can be embedded by the main program in `main.go`.
+The format of text that is expected in `bibel_compile.go` as follows:
+
+- **First line**: Book title
+- **Second line**: Chapter
+- **Every line after**: Body of text
+- Each text file is a chapter
 
 ## Licence
 
