@@ -1,5 +1,5 @@
 package main
- 
+
 import (
   "bytes"
   "fmt"
@@ -37,7 +37,7 @@ Example usage:
 
   bibel | grep "inherit the earth"
   bibel "1 mac" 1 1:2
-  bibel genesis 2 
+  bibel genesis 2
 
 For more information, visit <https://www.github.com/maxwelljens/bibel/>
 Program written by Maxwell Jensen (c) 2021
@@ -206,13 +206,13 @@ func parseFlags (args []string) {
     os.Exit(0)
   }
 }
- 
+
 func main() {
   // Decode Bible
   var err error
   if BIBLE, err = decodeBible(BIBEL); err != nil {
     fmt.Println("Bible embedding error:", err)
-  } 
+  }
   // If successful, it is good
   parseFlags(os.Args[1:])
   parseArguments(os.Args[1:])

@@ -20,12 +20,12 @@ Example usage:
 
     $ bibel | grep "inherit the earth"
     Matthew. Chapter 5. [4] Blessed are the gentle, for they shall inherit the earth.
-    
+
     $ bibel "1 mac" 1 1:6
     1 Maccabees.
     Chapter 1.
     After Alexander the Macedonian, the son of Philip, who came out of the land of Chittim [...]
-    
+
     $ bibel gen
     [Prints the entirety of Genesis]
 
@@ -45,7 +45,7 @@ The format of text that is expected in `bibel_compile.go` as follows:
 
 - **First line**: Book title
 - **Second line**: Chapter
-- **Every line after**: Body of text
+- **Every line after**: Verse
 - Each text file is a chapter
 
 ## Licence
