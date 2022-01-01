@@ -174,11 +174,9 @@ fn par_print_chapter(book: Option<&str>, chapter: Option<&str>, is_coloured: boo
   Bible::iter().par_bridge().for_each(|dir| {
     dir.par_lines().for_each(|file| {
       let mut body: Vec<(usize, String)> = Vec::new();
-      if str_match!(book, file, 0) {
-        if num_match!(chapter, file, 1) {
-          for (i, line) in file_unwrap!(file).lines().enumerate() {
-            body.push((i, line.to_string()));
-          }
+      if str_match!(book, file, 0) && num_match!(chapter, file, 1) {
+        for (i, line) in file_unwrap!(file).lines().enumerate() {
+          body.push((i, line.to_string()));
         }
         // Format the lines and print them
         let mut title: String = String::from("ERROR_TITLE");
@@ -225,11 +223,9 @@ fn par_print_verse(
       let verse_upper_num = parsed_verse[1].parse::<usize>().unwrap();
 
       let mut body: Vec<(usize, String)> = Vec::new();
-      if str_match!(book, file, 0) {
-        if num_match!(chapter, file, 1) {
-          for (i, line) in file_unwrap!(file).lines().enumerate() {
-            body.push((i, line.to_string()));
-          }
+      if str_match!(book, file, 0) && num_match!(chapter, file, 1) {
+        for (i, line) in file_unwrap!(file).lines().enumerate() {
+          body.push((i, line.to_string()));
         }
       }
 
