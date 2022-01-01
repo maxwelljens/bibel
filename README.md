@@ -10,7 +10,7 @@ very comfortable.
 
 ## How do I use bibel?
 
-**bibel** [FLAG]... [BOOK] [CHAPTER] [VERSE]...
+**bibel** [FLAG]... [BOOK] [CHAPTER] [VERSE]...
 
 If no arguments are specified, the entire Bible is printed. Specify BOOK to print a book from the Bible; specify BOOK
 and CHAPTER to print a chapter from the Bible; specify BOOK, CHAPTER, and VERSE to print a verse or range of verses
@@ -39,9 +39,11 @@ Names of books used are their standard short names, (e.g. *1 Maccabees* instead 
 
 ## How do I build bibel?
 
-`bibel` is written in Go, and has no external dependencies. Program in `bibel_compile.go` compiles the World English
-Bible text files in `/web_bible` into a `bible.dat` binary that then can be embedded by the main program in `main.go`.
-The format of text that is expected in `bibel_compile.go` as follows:
+`bibel` is written in Rust. External dependencies are ![clap](https://github.com/clap-rs/clap),
+![colored](https://github.com/mackwic/colored), ![rayon](https://github.com/rayon-rs/rayon), and
+![rust-embed](https://github.com/pyros2097/rust-embed), The files in `/web_bible` are embedded during compilation of
+`main.rs`, and are accessed thusly and portably at runtime.
+The format of text that is expected during embedding is as follows:
 
 - **First line**: Book title
 - **Second line**: Chapter
