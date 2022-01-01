@@ -7,7 +7,6 @@ use colored::*;
 use rayon::iter::ParallelBridge;
 use rayon::prelude::*;
 use rust_embed::RustEmbed;
-use std::time::Instant;
 
 #[derive(RustEmbed)]
 #[folder = "src/web_bible/"]
@@ -52,7 +51,6 @@ fn main() {
   if args.is_present("licence") {
     println!("{}", LICENCE);
   } else if args.is_present("VERSE") {
-    let now = Instant::now();
     par_print_verse(
       args.value_of("BOOK"),
       args.value_of("CHAPTER"),
@@ -60,27 +58,16 @@ fn main() {
       args.is_present("verbose"),
       args.is_present("colour"),
     );
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
   } else if args.is_present("CHAPTER") {
-    let now = Instant::now();
     par_print_chapter(
       args.value_of("BOOK"),
       args.value_of("CHAPTER"),
       args.is_present("colour"),
     );
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
   } else if args.is_present("BOOK") {
-    let now = Instant::now();
     par_print_book(args.value_of("BOOK"), args.is_present("colour"));
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
   } else {
-    let now = Instant::now();
     par_print_bible(args.is_present("colour"));
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
   }
 }
 
