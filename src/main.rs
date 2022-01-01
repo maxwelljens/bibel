@@ -12,6 +12,7 @@ use rust_embed::RustEmbed;
 #[folder = "src/web_bible/"]
 struct Bible;
 
+const VERSION: &str = "1.1.0";
 const LICENCE: &str = "Program written by Maxwell Jensen (c) 2021
 Licensed under European Union Public Licence 1.2.
 For more information, visit <https://www.github.com/maxwelljens/bibel/>
@@ -21,7 +22,7 @@ trademark of <https://www.ebible.org/>.";
 
 fn main() {
   let args = App::new("bibel")
-    .version("1.0.0")
+    .version(VERSION)
     .author("Maxwell Jensen <maxwelljensen@posteo.net>")
     .about("Bible CLI utility")
     .arg(
