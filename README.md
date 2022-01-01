@@ -41,7 +41,7 @@ Names of books used are their standard short names, (e.g. *1 Maccabees* instead 
 
 `bibel` is written in Rust. External dependencies are [clap](https://github.com/clap-rs/clap),
 [colored](https://github.com/mackwic/colored), [rayon](https://github.com/rayon-rs/rayon), and
-[rust-embed](https://github.com/pyros2097/rust-embed), The files in `/web_bible` are embedded during compilation of
+[rust-embed](https://github.com/pyros2097/rust-embed). The files in `/web_bible` are embedded during compilation of
 `main.rs`, and are accessed thusly and portably at runtime.
 The format of text that is expected during embedding is as follows:
 
