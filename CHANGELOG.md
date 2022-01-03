@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2022-01-01
+### Changed
+- Implemented bitflags for functions using the [bitflags](https://github.com/bitflags/bitflags) Rust library, hopefully
+increasing the performance, but also streamlining the code
+
+### Fixed
+- Fixed a bug where the end verse would be read with an offset of minus two (e.g. "6:20" would get you verses 6 to 18,
+not 6 to 20 as expected by the user)
+
 ## [1.1.0] - 2022-01-01
 ### Added
 - Configuration flag (`-c, --colour`) to colour output annotations
