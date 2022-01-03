@@ -239,8 +239,13 @@ fn par_print_verse(book: Option<&str>, chapter: Option<&str>, verse: Option<&str
   Bible::iter().par_bridge().for_each(|dir| {
     dir.par_lines().for_each(|file| {
       let parsed_verse: Vec<&str> = verse.unwrap().split_terminator(':').collect();
+      // If only one number has been provided, then just make the ranges the same number
       let verse_lower_num = parsed_verse[0].parse::<usize>().unwrap();
-      let verse_upper_num = parsed_verse[1].parse::<usize>().unwrap();
+      let verse_upper_num = if parsed_verse.len() == 1 {
+        verse_lower_num
+      } else {
+        parsed_verse[1].parse::<usize>().unwrap()
+      };
 
       let mut body: Vec<(usize, String)> = Vec::new();
       if str_match!(book, file, 0) && num_match!(chapter, file, 1) {
