@@ -1,7 +1,7 @@
 [package]
 name = "bibel"
 authors = ["Maxwell Jensen <maxwelljensen@posteo.net>"]
-version = "1.1.1"
+version = "1.1.2"
 licence = "EUPL 1.2"
 readme = "README.md"
 repository = "https://www.github.com/maxwelljens/bibel"
