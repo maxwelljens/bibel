@@ -10,7 +10,7 @@ very comfortable.
 
 ## How do I use bibel?
 
-    **bibel** [OPTIONS]... [ARGS]...
+    bibel [OPTIONS]... [ARGS]...
 
     ARGS:
         <BOOK>       Book from the Bible
