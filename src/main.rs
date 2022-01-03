@@ -29,7 +29,7 @@ fn main() {
       Arg::new("colour")
         .short('c')
         .long("colour")
-        .help("Print annotations with colour; it is very slow"),
+        .help("Print annotations with colour"),
     )
     .arg(
       Arg::new("licence")
@@ -41,7 +41,7 @@ fn main() {
       Arg::new("verbose")
         .short('v')
         .long("verbose")
-        .help("Show user input warnings"),
+        .help("Show output with additional information"),
     )
     .arg(Arg::new("BOOK").index(1).help("Book from the Bible"))
     .arg(Arg::new("CHAPTER").index(2).help("Chapter in <BOOK>"))

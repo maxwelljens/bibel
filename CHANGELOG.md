@@ -8,8 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Configuration flag (`-c, --colour`) to colour output annotations
 - Configuration flag (`-v, --verbose`) to output warnings about user input
-- Parallel computation using Rust library Rayon. Increases printing of the Bible from ~500 milliseconds to ~350
-  milliseconds.
+- Parallel computation using Rust library Rayon, dramatically increasing performance
 
 ### Changed
 - Rewritten from scratch from Go in Rust
