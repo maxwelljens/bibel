@@ -1,6 +1,6 @@
 ![bibel](/logo.png "bibel")
 ![GitHub](https://img.shields.io/github/license/maxwelljens/bibel?label=Licence) ![GitHub last commit](https://img.shields.io/github/last-commit/maxwelljens/bibel?label=Last%20Commit)
-[![asciicast](https://asciinema.org/a/438002.svg)](https://asciinema.org/a/438002)
+![preview](./preview.svg)
 
 ## What is bibel?
 

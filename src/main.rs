@@ -287,7 +287,7 @@ fn par_print_verse(book: Option<&str>, chapter: Option<&str>, verse: Option<&str
             title = line;
           } else if i == 1 {
             chapter = line;
-          } else if i > verse_lower_num && (i - 2) < verse_upper_num {
+          } else if i > verse_lower_num && (i - LEN_OFFSET) < verse_upper_num {
             if flags.intersects(Flags::COLOUR) {
               println!(
                 "{} {} [{}] {}",
