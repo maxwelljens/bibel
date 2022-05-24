@@ -1,4 +1,4 @@
-![bibel](/logo.png "bibel")
+![bibel](/logo.gif "bibel")
 ![GitHub](https://img.shields.io/github/license/maxwelljens/bibel?label=Licence) ![GitHub last commit](https://img.shields.io/github/last-commit/maxwelljens/bibel?label=Last%20Commit)
 ![preview](./preview.svg)
 
