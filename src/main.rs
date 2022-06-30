@@ -1,4 +1,4 @@
-// Program written by Maxwell Jensen (c) 2021
+// Program written by Maxwell Jensen (c) 2022
 // Licensed under European Union Public Licence 1.2.
 // For more information, visit <https://www.github.com/maxwelljens/bibel/>
 

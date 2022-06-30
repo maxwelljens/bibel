@@ -54,6 +54,17 @@ of text that is expected during embedding is as follows:
 - **Every line after**: Verse
 - Each text file is a chapter
 
+## But where is bibel?
+
+After reading about [GitHub Copilot](https://sfconservancy.org/blog/2022/jun/30/give-up-github-launch/), I realised
+that GitHub is becoming ridiculous. Brief rundown is that Microsoft is likely infringing copyright with it, but [calls
+it "fair use"](https://twitter.com/natfriedman/status/1409914420579344385). It's obviously not, and I do not give
+Microsoft permission to use my code in their own code without appropriately licensing all GitHub Copilot output under
+EUPL 1.2, GPLv3, or other copyleft-compatible licences. Therefore I am not hosting the code here. Instead you can find
+it here:
+
+[](https://maxwelljensen.no/git/maxwelljensen/bibel)
+
 ## Licence
 
 This project is licensed under [European Union Public Licence
