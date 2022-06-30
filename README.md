@@ -63,7 +63,7 @@ Microsoft permission to use my code in their own code without appropriately lice
 EUPL 1.2, GPLv3, or other copyleft-compatible licences. Therefore I am not hosting the code here. Instead you can find
 it here:
 
-[](https://maxwelljensen.no/git/maxwelljensen/bibel)
+[https://maxwelljensen.no/git/maxwelljensen/bibel](https://maxwelljensen.no/git/maxwelljensen/bibel)
 
 ## Licence
 
