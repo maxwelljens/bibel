@@ -58,6 +58,8 @@ of text that is expected during embedding is as follows:
 
 [https://maxwelljensen.no/git/maxwelljensen/bibel](https://maxwelljensen.no/git/maxwelljensen/bibel)
 
+**Note:** You can sign in with your GitHub account.
+
 ## Licence
 
 This project is licensed under [European Union Public Licence
