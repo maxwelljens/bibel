@@ -56,9 +56,9 @@ of text that is expected during embedding is as follows:
 
 ## But where is bibel?
 
-[https://maxwelljensen.no/git/maxwelljensen/bibel](https://maxwelljensen.no/git/maxwelljensen/bibel)
-
 **Note:** You can sign in with your GitHub account.
+
+[https://maxwelljensen.no/git/maxwelljensen/bibel](https://maxwelljensen.no/git/maxwelljensen/bibel)
 
 ## Licence
 
