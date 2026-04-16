@@ -8,11 +8,11 @@ import (
 // Bible represents the complete Bible data
 type Bible struct {
 	Metadata struct {
-		Name    string `json:"name"`
-		Lang    string `json:"lang_short"`
+		Name string `json:"name"`
+		Lang string `json:"lang_short"`
 	} `json:"metadata"`
 	Verses []Verse `json:"verses"`
-	
+
 	// Index for quick lookups
 	byBookChapterVerse map[int]map[int]map[int]*Verse
 }
@@ -23,12 +23,12 @@ func LoadBible(filePath string) (*Bible, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var bible Bible
 	if err := json.Unmarshal(data, &bible); err != nil {
 		return nil, err
 	}
-	
+
 	bible.buildIndex()
 	return &bible, nil
 }
@@ -36,18 +36,18 @@ func LoadBible(filePath string) (*Bible, error) {
 // buildIndex creates a lookup index for verses
 func (b *Bible) buildIndex() {
 	b.byBookChapterVerse = make(map[int]map[int]map[int]*Verse)
-	
+
 	for i := range b.Verses {
 		verse := &b.Verses[i]
-		
+
 		if b.byBookChapterVerse[verse.Book] == nil {
 			b.byBookChapterVerse[verse.Book] = make(map[int]map[int]*Verse)
 		}
-		
+
 		if b.byBookChapterVerse[verse.Book][verse.Chapter] == nil {
 			b.byBookChapterVerse[verse.Book][verse.Chapter] = make(map[int]*Verse)
 		}
-		
+
 		b.byBookChapterVerse[verse.Book][verse.Chapter][verse.VerseNum] = verse
 	}
 }
@@ -98,7 +98,7 @@ func (b *Bible) CountVersesInChapter(book, chapter int) int {
 // GetVerseRange retrieves verses in a range
 func (b *Bible) GetVerseRange(book, chapter, firstVerse, lastVerse int) []*Verse {
 	var verses []*Verse
-	
+
 	if chapterMap, ok := b.byBookChapterVerse[book]; ok {
 		if verseMap, ok := chapterMap[chapter]; ok {
 			for i := firstVerse; i <= lastVerse; i++ {
@@ -108,6 +108,6 @@ func (b *Bible) GetVerseRange(book, chapter, firstVerse, lastVerse int) []*Verse
 			}
 		}
 	}
-	
+
 	return verses
 }

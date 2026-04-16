@@ -2,19 +2,19 @@ package bible
 
 // Verse represents a single Bible verse
 type Verse struct {
-	BookName  string `json:"book_name"`
-	Book      int    `json:"book"`
-	Chapter   int    `json:"chapter"`
-	VerseNum  int    `json:"verse"`
-	Text      string `json:"text"`
+	BookName string `json:"book_name"`
+	Book     int    `json:"book"`
+	Chapter  int    `json:"chapter"`
+	VerseNum int    `json:"verse"`
+	Text     string `json:"text"`
 }
 
 // VerseRange represents a range of verses (inclusive)
 type VerseRange struct {
-	Book         int
-	Chapter      int
-	FirstVerse   int
-	LastVerse    int
+	Book       int
+	Chapter    int
+	FirstVerse int
+	LastVerse  int
 }
 
 // BookIndex represents the four Gospels
@@ -49,3 +49,4 @@ type Bookmark struct {
 	FirstVerse  int       `toml:"first_verse"`
 	SecondVerse int       `toml:"second_verse"`
 }
+

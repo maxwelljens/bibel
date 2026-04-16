@@ -8,6 +8,31 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-16
+
+### Added
+
+- **TUI framework** using `bubbletea` for interactive terminal user interface
+- **Styled output** with `lipgloss` for terminal-adaptive colours and borders
+- **Interactive mode**: Verse displayed in a rounded border box with "Press q
+to quit..." message
+- **Smart TTY detection**: Automatically falls back to formatted output in
+non-interactive environments
+- **Enhanced argument handling**: `-p/--plain` now outputs plain text without
+TUI or formatting
+- **New package structure**: `internal/tui/` containing TUI model and styling
+components
+
+### Changed
+
+- **Program flow**: Default mode now launches interactive TUI when run in a
+terminal
+- **Plain mode behaviour**: `--plain` flag now outputs only verse text (no
+header or TUI)
+- **Terminal detection**: Non-TTY environments show formatted output with ANSI
+colours
+- **Dependencies**: Added `bubbletea` and `lipgloss` for TUI functionality
+
 ## [1.1.0] - 2026-04-16
 
 ### Added
@@ -52,9 +77,9 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ### Removed
 
-- OCaml implementation (`old_code.ml` kept for reference)
+- OCaml implementation
 - Dependency on `bookmark.toml` file for progression
-- Regex-based verse parsing (replaced with direct JSON indexing)
+- Regex-based verse parsing (replaced with JSON Bible data)
 
 ## [0.1.0] - 2026-04-16
 
@@ -71,8 +96,3 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 - Rewritten from OCaml to Go programming language
 - Changed data format from custom to JSON
 - Improved error handling and validation
-
-[unreleased]: https://github.com/maxwelljensen/bibel/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/maxwelljensen/bibel/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/maxwelljensen/bibel/compare/v0.1.0...v1.0.0
-[0.1.0]: https://github.com/maxwelljensen/bibel/releases/tag/v0.1.0

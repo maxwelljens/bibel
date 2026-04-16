@@ -6,12 +6,14 @@ import (
 	"time"
 
 	"github.com/alexflint/go-arg"
+	"golang.org/x/term"
 	"maxwelljensen/bibel/internal"
+	"maxwelljensen/bibel/internal/tui"
 )
 
 // Args defines the command line arguments
 type Args struct {
-	Plain bool `arg:"-p,--plain" help:"output plain text without chapter name or verse numbers"`
+	Plain bool `arg:"-p,--plain" help:"output plain text without formatting or TUI"`
 }
 
 // Description returns a description of the program
@@ -45,15 +47,28 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Initialise formatter
-	formatter := bible.NewFormatter()
-
-	// Print header (unless plain mode)
-	if !args.Plain {
-		fmt.Println(formatter.FormatHeader(todayBookmark))
+	// If plain mode, just print plain text (no TUI)
+	if args.Plain {
+		formatter := bible.NewFormatter()
+		// In plain mode, we don't print the header
+		fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
+		return
 	}
 
-	// Print snippet
-	fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
+	// Check if we're running in a terminal
+	// If not, fall back to formatted output (similar to plain mode but with header)
+	if !term.IsTerminal(int(os.Stdout.Fd())) {
+		formatter := bible.NewFormatter()
+		fmt.Println(formatter.FormatHeader(todayBookmark))
+		fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
+		return
+	}
+
+	// Create and run TUI program
+	program := tui.CreateTUIProgram(bibleData, todayBookmark, false)
+	if err := program.Start(); err != nil {
+		fmt.Fprintf(os.Stderr, "Error running TUI: %v\n", err)
+		os.Exit(1)
+	}
 }
 

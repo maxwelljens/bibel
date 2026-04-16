@@ -18,18 +18,18 @@ func NewFormatter() *Formatter {
 func (f *Formatter) FormatHeader(bookmark *Bookmark) string {
 	// ANSI color codes
 	const (
-		reset   = "\033[0m"
-		green   = "\033[32m"
-		yellow  = "\033[33m"
+		reset  = "\033[0m"
+		green  = "\033[32m"
+		yellow = "\033[33m"
 	)
-	
-	return fmt.Sprintf("%s%s %d%s\n%s w. %d-%d%s", 
+
+	return fmt.Sprintf("%s%s %d%s\n%s w. %d-%d%s",
 		green,
-		bookmark.Book.String(), 
+		bookmark.Book.String(),
 		bookmark.Chapter,
 		reset,
 		yellow,
-		bookmark.FirstVerse, 
+		bookmark.FirstVerse,
 		bookmark.SecondVerse,
 		reset)
 }
@@ -39,7 +39,7 @@ func (f *Formatter) FormatSnippet(verses []*Verse) string {
 	if len(verses) == 0 {
 		return "Error: No text matched"
 	}
-	
+
 	var sb strings.Builder
 	for i, verse := range verses {
 		if i > 0 {
@@ -54,13 +54,14 @@ func (f *Formatter) FormatSnippet(verses []*Verse) string {
 		}
 		sb.WriteString(text)
 	}
-	
+
 	return sb.String()
 }
 
 // ExtractAndFormat extracts verses for a bookmark and formats them
 func (f *Formatter) ExtractAndFormat(bible *Bible, bookmark *Bookmark) string {
-	verses := bible.GetVerseRange(int(bookmark.Book), bookmark.Chapter, 
+	verses := bible.GetVerseRange(int(bookmark.Book), bookmark.Chapter,
 		bookmark.FirstVerse, bookmark.SecondVerse)
 	return f.FormatSnippet(verses)
 }
+

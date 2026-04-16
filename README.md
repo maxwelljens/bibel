@@ -1,19 +1,21 @@
-# `bibel` - Bible Verse CLI Utility
+# `bibel` - Bible Verse CLI/TUI Utility
 
-A Go utility for displaying Bible verses. This tool shows Bible verses based on
-the current date, displaying 12 verses per day through the four Gospels.
+A Go utility for displaying Bible verses with interactive terminal interface.
+This tool shows Bible verses based on the current date, displaying 12 verses
+per day through the four Gospels.
 
 ## Features
 
+- **Interactive TUI**: Terminal User Interface using `bubbletea` with styled boxes
 - **Date-Based Progression**: Automatically calculates position based on day of
 year (1 January = Matthew 1:1-12)
 - **Smart Sizing**: Default snippet size is 12 verses, extends to end of
 chapter if less than 12 verses remain
-- **Colour Output**: ANSI color-coded output (green for book/chapter, yellow
-for verse range)
+- **Adaptive Styling**: Terminal-adaptive colours and borders using `lipgloss`
+- **Interactive Controls**: Press `q` to quit (MOTD-like behaviour)
 - **Yearly Cycle**: Progresses through all four Gospels each year, restarting
 on 1 January
-- **Simple CLI**: Run to display today's Bible snippet
+- **Multiple Output Modes**: Interactive TUI, formatted ANSI, or plain text
 
 ## Installation
 
@@ -76,13 +78,17 @@ The program calculates reading position as follows:
 ```
 .
 ├── cmd/bibel.go                 # Main CLI entry point
-├── internal/bible/
-│   ├── verse.go                 # Data structures
-│   ├── loader.go                # JSON loading and indexing
-│   ├── dateprogression.go       # Date-based position calculation
-│   ├── formatter.go             # Output formatting
-│   └── bookmark.go              # Legacy bookmark management (optional)
+├── internal/
+│   ├── bible/                   # Core Bible functionality
+│   │   ├── verse.go             # Data structures
+│   │   ├── loader.go            # JSON loading and indexing
+│   │   ├── dateprogression.go   # Date-based position calculation
+│   │   └── formatter.go         # Output formatting
+│   └── tui/                     # Terminal User Interface
+│       └── model.go             # bubbletea TUI model and styling
 ├── books/pol_nbg.json           # Bible data
+├── go.mod                       # Go module dependencies
+├── go.sum                       # Go dependency checksums
 └── old_code.ml                  # Original OCaml implementation
 ```
 
@@ -99,9 +105,6 @@ The program calculates reading position as follows:
 # Build
 go build ./cmd/bibel.go
 
-# Run with today's date
+# Run
 ./bibel
-
-# Test with specific date (environment variable)
-GOOSE_TEST_DATE=2026-01-01 ./bibel
 ```

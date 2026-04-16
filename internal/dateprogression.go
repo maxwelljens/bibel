@@ -19,10 +19,10 @@ func NewDateProgression(bible *Bible) *DateProgression {
 func (dp *DateProgression) GetPositionForDate(date time.Time) (*Bookmark, error) {
 	// Calculate day of year (1-366)
 	dayOfYear := date.YearDay()
-	
+
 	// Each day shows 12 verses
 	targetVerseOffset := (dayOfYear - 1) * 12 // Zero-indexed
-	
+
 	// Walk through Gospels to find the position
 	return dp.findPositionForOffset(targetVerseOffset)
 }
@@ -39,16 +39,16 @@ func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) 
 				break
 			}
 		}
-		
+
 		// Iterate through chapters
 		for chapter := 1; chapter <= maxChapter; chapter++ {
 			versesInChapter := dp.bible.CountVersesInChapter(book, chapter)
-			
+
 			// Check if offset falls within this chapter
 			if offset < versesInChapter {
 				// Offset is within this chapter
 				firstVerse := offset + 1 // Convert from 0-indexed to 1-indexed
-				
+
 				// Create initial bookmark (like AdvanceBookmark does)
 				secondVerse := min(firstVerse+11, versesInChapter)
 				bookmark := &Bookmark{
@@ -57,26 +57,26 @@ func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) 
 					FirstVerse:  firstVerse,
 					SecondVerse: secondVerse,
 				}
-				
+
 				// Apply lookahead rule (like AdjustForLookahead)
 				return dp.applyLookahead(bookmark), nil
 			}
-			
+
 			// Move to next chapter, subtracting this chapter's verses
 			offset -= versesInChapter
 		}
 	}
-	
-	// If we've gone through all Gospels and offset is still positive,
-	// wrap around to beginning (start over)
-	// Calculate modulo offset within total Gospel verses
+
+	// If we've gone through all Gospels and offset is still positive, wrap
+	// around to beginning (start over) Calculate modulo offset within total
+	// Gospel verses
 	totalVerses := dp.GetTotalGospelVerses()
 	if offset >= 0 {
 		adjustedOffset := offset % totalVerses
 		// Recursively find position for adjusted offset
 		return dp.findPositionForOffset(adjustedOffset)
 	}
-	
+
 	return nil, fmt.Errorf("could not find position for offset %d", offset)
 }
 
@@ -84,7 +84,7 @@ func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) 
 func (dp *DateProgression) applyLookahead(bookmark *Bookmark) *Bookmark {
 	versesInChapter := dp.bible.CountVersesInChapter(int(bookmark.Book), bookmark.Chapter)
 	versesRemaining := versesInChapter - bookmark.SecondVerse
-	
+
 	// If we're not at the end of the chapter and less than 12 verses remain for NEXT snippet
 	if versesRemaining > 0 && versesRemaining < 12 {
 		return &Bookmark{
@@ -94,7 +94,7 @@ func (dp *DateProgression) applyLookahead(bookmark *Bookmark) *Bookmark {
 			SecondVerse: versesInChapter,
 		}
 	}
-	
+
 	// Otherwise return the original bookmark
 	return bookmark
 }
@@ -113,3 +113,4 @@ func (dp *DateProgression) GetTotalGospelVerses() int {
 	}
 	return total
 }
+
