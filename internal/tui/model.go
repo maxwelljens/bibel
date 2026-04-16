@@ -143,10 +143,11 @@ func (m Model) View() string {
 	// Border = 1 left + 1 right = 2
 	// Total horizontal frame = 6
 	// Use window width with some margin
-	availableWidth := m.width - 10 // Leave some terminal margin
-	if availableWidth < 30 {
-		availableWidth = 30 // Minimum reasonable width
-	}
+	availableWidth := max(
+		// Leave some terminal margin
+		m.width-10,
+		// Minimum reasonable width
+		30)
 	contentWidth := availableWidth - 6 // Account for box frame
 
 	// Apply width constraint for text wrapping
@@ -194,4 +195,3 @@ func stripANSI(str string) string {
 
 	return result.String()
 }
-

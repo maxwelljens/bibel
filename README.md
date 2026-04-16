@@ -77,19 +77,18 @@ The program calculates reading position as follows:
 
 ```
 .
-├── cmd/bibel.go                 # Main CLI entry point
+├── cmd/bibel.go            # Main CLI entry point
 ├── internal/
-│   ├── bible/                   # Core Bible functionality
-│   │   ├── verse.go             # Data structures
-│   │   ├── loader.go            # JSON loading and indexing
-│   │   ├── dateprogression.go   # Date-based position calculation
-│   │   └── formatter.go         # Output formatting
-│   └── tui/                     # Terminal User Interface
-│       └── model.go             # bubbletea TUI model and styling
-├── books/pol_nbg.json           # Bible data
-├── go.mod                       # Go module dependencies
-├── go.sum                       # Go dependency checksums
-└── old_code.ml                  # Original OCaml implementation
+│   ├── bible/              # Core Bible functionality
+│   ├── verse.go            # Data structures
+│   ├── loader.go           # JSON loading and indexing
+│   ├── dateprogression.go  # Date-based position calculation
+│   ├── formatter.go        # Output formatting
+│   └── tui/                # Terminal User Interface
+│       └── model.go        # bubbletea TUI model and styling
+├── books/pol_nbg.json      # Bible data
+├── go.mod                  # Go module dependencies
+└── go.sum                  # Go dependency checksums
 ```
 
 ## Examples
