@@ -8,6 +8,14 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-04-16
+
+### Added
+
+- Argument parsing using `go-arg` library
+- `-p/--plain` flag to output plain text without chapter name or verse numbers
+- Program description and help text
+
 ## [1.0.0] - 2026-04-16
 
 ### Added
@@ -63,3 +71,8 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 - Rewritten from OCaml to Go programming language
 - Changed data format from custom to JSON
 - Improved error handling and validation
+
+[unreleased]: https://github.com/maxwelljensen/bibel/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/maxwelljensen/bibel/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/maxwelljensen/bibel/compare/v0.1.0...v1.0.0
+[0.1.0]: https://github.com/maxwelljensen/bibel/releases/tag/v0.1.0
