@@ -3,49 +3,37 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"maxwelljensen/bibel/internal"
 )
 
 func main() {
-	// TEST: Initialise components
-	biblePath := "books/pol_nbg.json"
-	bookmarkPath := "test/bookmark.toml"
-
 	// Load Bible data
+	biblePath := "books/pol_nbg.json"
 	bibleData, err := bible.LoadBible(biblePath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading Bible data: %v\n", err)
 		os.Exit(1)
 	}
 
-	// Initialise bookmark manager
-	bookmarkMgr := bible.NewBookmarkManager(bookmarkPath)
+	// Initialize date progression
+	dateProg := bible.NewDateProgression(bibleData)
 
-	// Read current bookmark
-	currentBookmark, err := bookmarkMgr.ReadBookmark()
+	// Get current date
+	currentDate := time.Now()
+	
+	// Calculate position for today
+	todayBookmark, err := dateProg.GetPositionForDate(currentDate)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading bookmark: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error calculating date position: %v\n", err)
 		os.Exit(1)
 	}
 
-	// Adjust bookmark based on lookahead rule
-	adjustedBookmark := bookmarkMgr.AdjustForLookahead(currentBookmark, bibleData)
-
-	// Initialise formatter
+	// Initialize formatter
 	formatter := bible.NewFormatter()
 
 	// Print header and snippet
-	fmt.Println(formatter.FormatHeader(adjustedBookmark))
-	fmt.Println(formatter.ExtractAndFormat(bibleData, adjustedBookmark))
-
-	// Calculate next bookmark
-	nextBookmark := bookmarkMgr.AdvanceBookmark(adjustedBookmark, bibleData)
-
-	// Write next bookmark
-	if err := bookmarkMgr.WriteBookmark(nextBookmark); err != nil {
-		fmt.Fprintf(os.Stderr, "Error writing next bookmark: %v\n", err)
-		os.Exit(1)
-	}
+	fmt.Println(formatter.FormatHeader(todayBookmark))
+	fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
 }
-

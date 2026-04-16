@@ -24,8 +24,5 @@ go.work.sum
 # env file
 .env
 
-# Editor/IDE
+# Honk
 .goosehints
-
-# Other
-old_code.ml

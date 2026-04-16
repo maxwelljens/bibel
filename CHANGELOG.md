@@ -1,0 +1,65 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a
+Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [1.0.0] - 2026-04-16
+
+### Added
+
+- Complete Go migration from original OCaml implementation
+- Date-based Bible verse progression system
+  - Calculates position based on day of year (1st January = Matthew 1:1-12)
+  - Shows 12 verses per day, cycling through all four Gospels yearly
+- ANSI color-coded output (green for book/chapter, yellow for verse range)
+- Smart lookahead rule: extends to end of chapter if less than 12 verses remain
+- Support for Polish "Nowa Biblia Gdańska" translation (`books/pol_nbg.json``)
+- Complete test suite with edge case validation
+- `README`` documentation with usage examples and algorithm explanation
+
+### Changed
+
+- **BREAKING**: Changed from bookmark-based progression to date-based progression
+  - Previous versions used `bookmark.toml` to track reading position
+  - New version calculates position from current date
+  - Backward incompatible with bookmark-based usage
+- Restructured codebase with modular Go packages:
+  - `internal/loader.go`: JSON Bible data loading and indexing
+  - `internal/dateprogression.go`: Date-to-verse position calculation
+  - `internal/formatter.go`: ANSI color formatting and text extraction
+  - `internal/verse.go`: Data structures and constants
+  - `internal/bookmark.go`: Legacy bookmark support (unused in date-based mode)
+
+### Fixed
+
+- Proper handling of chapter and book boundaries
+- Correct modulo wrapping for yearly cycle (total 3779 Gospel verses)
+- Leap year support via Go's standard `time.YearDay()` function
+- Validation of verse ranges and error handling
+
+### Removed
+
+- OCaml implementation (`old_code.ml` kept for reference)
+- Dependency on `bookmark.toml` file for progression
+- Regex-based verse parsing (replaced with direct JSON indexing)
+
+## [0.1.0] - 2026-04-16
+
+### Added
+
+- Initial Go port of OCaml Bible verse utility
+- Bookmark-based progression system (TOML file)
+- Support for Polish "Nowa Biblia Gdańska" translation
+- Basic ANSI color formatting
+- Lookahead rule implementation
+
+### Changed
+
+- Rewritten from OCaml to Go programming language
+- Changed data format from custom to JSON
+- Improved error handling and validation
