@@ -8,6 +8,44 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-04-17
+
+### Added
+
+- **Multiple reading modes** via new `-r/--reading` command line option:
+  - `evangelion` (default): Gospels only (Matthew, Mark, Luke, John)
+  - `new_testament`: Entire New Testament (books 40-66)
+  - `old_testament`: Old Testament only (books 1-39)
+  - `bible`: The entire Bible (books 1-66)
+- **Flexible Bible source support**: Can now work with any Bible translation
+  - Removed hardcoded Polish book names
+  - Reads `book_name` field directly from JSON data
+
+### Changed
+
+- **Date progression system enhanced**:
+  - `NewDateProgressionWithReadingMode()` accepts reading mode parameter
+  - Calculates verse positions based on selected reading scope
+  - Proper wrapping at boundaries of each reading mode
+- **Formatter now requires Bible reference**:
+  - `NewFormatterWithConfig()` now accepts `*Bible` parameter
+  - Formatter retrieves book names dynamically from loaded Bible data
+  - Updated all formatter initialization calls in codebase
+- **Book name handling refactored**:
+  - Removed `polishBookNames` map from `verse.go`
+  - `BookIndex.String()` returns numeric fallback representation
+  - Actual book names sourced from Bible JSON metadata
+- **Configuration system enhanced**:
+  - Added `reading_mode` configuration option with validation
+  - Command line `-r/--reading` overrides config setting
+  - Improved default value handling for empty configuration fields
+
+### Fixed
+
+- **Configuration validation**: Allow empty reading mode during initial load
+- **Build errors**: Fixed Go compilation issues in configuration unmarshalling
+- **Backward compatibility**: Maintains existing behavior for default mode
+
 ## [1.3.0] - 2026-04-17
 
 ### Added
@@ -100,9 +138,8 @@ colours
 ### Changed
 
 - **BREAKING**: Changed from bookmark-based progression to date-based progression
-  - Previous versions used `bookmark.toml` to track reading position
-  - New version calculates position from current date
-  - Backward incompatible with bookmark-based usage
+  - Previous versions used `bookmark.toml` to track reading position, new
+  version calculates position from current date
 - Restructured codebase with modular Go packages:
   - `internal/loader.go`: JSON Bible data loading and indexing
   - `internal/dateprogression.go`: Date-to-verse position calculation

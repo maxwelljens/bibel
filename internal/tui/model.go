@@ -36,7 +36,7 @@ func NewModel(bibleData *bible.Bible, bookmark *bible.Bookmark, config *bible.Co
 		bookmark:   bookmark,
 		outputMode: config.OutputMode,
 		styles:     createStyles(config),
-		formatter:  bible.NewFormatterWithConfig(config.Formatter.UseColours, config.Formatter.HeaderFormat),
+		formatter:  bible.NewFormatterWithConfig(bibleData, config.Formatter.UseColours, config.Formatter.HeaderFormat),
 		config:     config,
 	}
 	return m

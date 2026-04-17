@@ -8,6 +8,9 @@ output_mode = "tui"
 # Path to Bible data file (relative to executable or absolute path)
 bible_path = "books/pol_nbg.json"
 
+# Reading mode: "evangelion" (four Gospels), "new_testament", "old_testament", "bible"
+reading_mode = "evangelion"
+
 [tui]
   # Whether to show the quit message "Press q to quit..."
   show_quit_message = true

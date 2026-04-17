@@ -13,6 +13,7 @@ import (
 
 // Args defines the command line arguments
 type Args struct {
+	Reading string `arg:"-r,--reading" help:"reading mode: evangelion (Gospels), new_testament, old_testament, bible (default: evangelion)"`
 	Plain bool `arg:"-p,--plain" help:"output plain text without formatting or TUI"`
 	Formatted bool `arg:"-f,--formatted" help:"output formatted text with ANSI colours (no TUI)"`
 	GenerateConfig bool `arg:"-g,--generate-config" help:"generate a default configuration file and exit"`
@@ -21,8 +22,9 @@ type Args struct {
 
 // Description returns a description of the program
 func (Args) Description() string {
-	return "Display today's Bible reading from the four Gospels (Matthew, Mark, Luke, John).\n" +
+	return "Display today's Bible reading based on selected reading mode.\n" +
 		"Reads 12 verses per day based on the current date.\n" +
+		"Reading modes: evangelion (four Gospels), new_testament, old_testament, bible\n" +
 		"Configuration file: $XDG_CONFIG_HOME/bibel/config.toml"
 }
 
@@ -48,6 +50,9 @@ func main() {
 	}
 
 	// Override config with command line arguments
+	if args.Reading != "" {
+		cfg.ReadingMode = args.Reading
+	}
 	if args.Plain {
 		cfg.OutputMode = "plain"
 	} else if args.Formatted {
@@ -68,7 +73,7 @@ func main() {
 	}
 
 	// Initialise date progression with configured verses per day
-	dateProg := bible.NewDateProgressionWithConfig(bibleData, cfg.DateProgression.VersesPerDay)
+	dateProg := bible.NewDateProgressionWithReadingMode(bibleData, cfg.DateProgression.VersesPerDay, bible.ReadingMode(cfg.ReadingMode))
 
 	// Get current date
 	currentDate := time.Now()
@@ -92,12 +97,12 @@ func main() {
 	// Handle different output modes
 	switch outputMode {
 	case "plain":
-		formatter := bible.NewFormatterWithConfig(false, cfg.Formatter.HeaderFormat)
+		formatter := bible.NewFormatterWithConfig(bibleData, false, cfg.Formatter.HeaderFormat)
 		// In plain mode, we don't print the header
 		fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
 		
 	case "formatted":
-		formatter := bible.NewFormatterWithConfig(cfg.Formatter.UseColours, cfg.Formatter.HeaderFormat)
+		formatter := bible.NewFormatterWithConfig(bibleData, cfg.Formatter.UseColours, cfg.Formatter.HeaderFormat)
 		fmt.Println(formatter.FormatHeader(todayBookmark))
 		fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
 		

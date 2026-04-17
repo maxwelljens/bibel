@@ -46,6 +46,8 @@ Default macOS and Windows paths are also supported.
 
 ### Configuration Options
 
+- **reading_mode**: Reading mode: "evangelion" (four Gospels; *default*),
+"new_testament", "old_testament", "bible" (default: "evangelion")
 - **output_mode**: Output mode: "tui" (interactive terminal UI), "formatted"
 (ANSI-coloured text), or "plain" (plain text)
 - **bible_path**: Path to Bible data file (default: "books/pol_nbg.json")
@@ -88,6 +90,8 @@ Generate a default configuration file:
 
 Command line arguments override configuration file settings:
 
+- `-r, --reading`: "evangelion" (four Gospels; *default*), "new_testament",
+"old_testament", "bible" (default: "evangelion")
 - `-p, --plain`: Output plain text without formatting or TUI
 - `-f, --formatted`: Output formatted text with ANSI colours (no TUI)
 - `-g, --generate-config`: Generate a default configuration file and exit
@@ -139,7 +143,6 @@ The program calculates reading position as follows:
 ├── configs/                 # Default configuration files
 │   └── config.example.toml  # The default configuration file
 ├── internal/  
-│   ├── bible/               # Core Bible functionality
 │   ├── config.go            # Reading and writing to config
 │   ├── dateprogression.go   # Date-based position calculation
 │   ├── verse.go             # Data structures

@@ -11,6 +11,8 @@ import (
 
 // Config represents the application configuration
 type Config struct {
+	// Reading mode: "evangelion", "new_testament", "old_testament", "bible"
+	ReadingMode string `toml:"reading_mode" mapstructure:"reading_mode"`
 	// Output mode: "tui", "formatted", "plain"
 	OutputMode string `toml:"output_mode" mapstructure:"output_mode"`
 
@@ -60,6 +62,7 @@ type Config struct {
 // DefaultConfig returns a configuration with default values
 func DefaultConfig() *Config {
 	cfg := &Config{
+		ReadingMode: "evangelion",
 		OutputMode: "tui",
 		BiblePath:  "books/pol_nbg.json",
 	}
@@ -95,6 +98,7 @@ func LoadConfig() (*Config, error) {
 
 	// Set defaults
 	defaultCfg := DefaultConfig()
+	viper.SetDefault("reading_mode", defaultCfg.ReadingMode)
 	viper.SetDefault("output_mode", defaultCfg.OutputMode)
 	viper.SetDefault("bible_path", defaultCfg.BiblePath)
 	viper.SetDefault("tui.show_quit_message", defaultCfg.TUI.ShowQuitMessage)
@@ -126,6 +130,24 @@ func LoadConfig() (*Config, error) {
 		return nil, fmt.Errorf("error unmarshalling config: %w", err)
 	}
 
+	// Apply defaults for any empty fields
+	defaultCfg = DefaultConfig()
+	if cfg.ReadingMode == "" {
+		cfg.ReadingMode = defaultCfg.ReadingMode
+	}
+	if cfg.OutputMode == "" {
+		cfg.OutputMode = defaultCfg.OutputMode
+	}
+	if cfg.BiblePath == "" {
+		cfg.BiblePath = defaultCfg.BiblePath
+	}
+	if cfg.TUI.BorderStyle == "" {
+		cfg.TUI.BorderStyle = defaultCfg.TUI.BorderStyle
+	}
+	if cfg.DateProgression.VersesPerDay == 0 {
+		cfg.DateProgression.VersesPerDay = defaultCfg.DateProgression.VersesPerDay
+	}
+
 	// Validate configuration
 	if err := cfg.Validate(); err != nil {
 		return nil, fmt.Errorf("invalid configuration: %w", err)
@@ -137,6 +159,7 @@ func LoadConfig() (*Config, error) {
 // SaveConfig saves the configuration to file
 func SaveConfig(cfg *Config) error {
 	// Set up viper with current config
+	viper.Set("reading_mode", cfg.ReadingMode)
 	viper.Set("output_mode", cfg.OutputMode)
 	viper.Set("bible_path", cfg.BiblePath)
 	viper.Set("tui.show_quit_message", cfg.TUI.ShowQuitMessage)
@@ -174,6 +197,18 @@ func GenerateDefaultConfig() error {
 
 // Validate checks if configuration values are valid
 func (c *Config) Validate() error {
+	// Validate reading mode
+	validReadingModes := map[string]bool{
+		"evangelion": true,
+		"new_testament": true,
+		"old_testament": true,
+		"bible": true,
+	}
+	// Allow empty reading mode (will use default)
+	if c.ReadingMode != "" && !validReadingModes[c.ReadingMode] {
+		return fmt.Errorf("invalid reading mode: %s, must be one of: evangelion, new_testament, old_testament, bible", c.ReadingMode)
+	}
+
 	// Validate output mode
 	validOutputModes := map[string]bool{
 		"tui":       true,

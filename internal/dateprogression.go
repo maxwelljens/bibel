@@ -9,11 +9,12 @@ import (
 type DateProgression struct {
 	bible       *Bible
 	versesPerDay int
+	readingMode  ReadingMode
 }
 
 // NewDateProgression creates a new date progression calculator
 func NewDateProgression(bible *Bible) *DateProgression {
-	return &DateProgression{bible: bible, versesPerDay: 12}
+	return &DateProgression{bible: bible, versesPerDay: 12, readingMode: ReadingModeEvangelion}
 }
 
 // NewDateProgressionWithConfig creates a new date progression calculator with config
@@ -21,7 +22,15 @@ func NewDateProgressionWithConfig(bible *Bible, versesPerDay int) *DateProgressi
 	if versesPerDay <= 0 {
 		versesPerDay = 12
 	}
-	return &DateProgression{bible: bible, versesPerDay: versesPerDay}
+	return &DateProgression{bible: bible, versesPerDay: versesPerDay, readingMode: ReadingModeEvangelion}
+}
+
+// NewDateProgressionWithReadingMode creates a new date progression calculator with reading mode
+func NewDateProgressionWithReadingMode(bible *Bible, versesPerDay int, readingMode ReadingMode) *DateProgression {
+	if versesPerDay <= 0 {
+		versesPerDay = 12
+	}
+	return &DateProgression{bible: bible, versesPerDay: versesPerDay, readingMode: readingMode}
 }
 
 // GetPositionForDate calculates the verse range for a given date
@@ -32,14 +41,17 @@ func (dp *DateProgression) GetPositionForDate(date time.Time) (*Bookmark, error)
 	// Each day shows configured number of verses
 	targetVerseOffset := (dayOfYear - 1) * dp.versesPerDay // Zero-indexed
 
-	// Walk through Gospels to find the position
+	// Walk through appropriate books based on reading mode
 	return dp.findPositionForOffset(targetVerseOffset)
 }
 
 // findPositionForOffset finds the bookmark for a given cumulative verse offset
 func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) {
-	// Iterate through books 40-43 (Matthew, Mark, Luke, John)
-	for book := 40; book <= 43; book++ {
+	// Determine which books to iterate through based on reading mode
+	startBook, endBook := dp.getBookRange()
+	
+	// Iterate through books in the range
+	for book := startBook; book <= endBook; book++ {
 		// Find last chapter in this book
 		maxChapter := 0
 		for chapter := 1; ; chapter++ {
@@ -47,6 +59,9 @@ func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) 
 				maxChapter = chapter - 1
 				break
 			}
+		}
+		if maxChapter == 0 {
+			continue // Book has no chapters? Shouldn't happen
 		}
 
 		// Iterate through chapters
@@ -76,10 +91,9 @@ func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) 
 		}
 	}
 
-	// If we've gone through all Gospels and offset is still positive, wrap
-	// around to beginning (start over) Calculate modulo offset within total
-	// Gospel verses
-	totalVerses := dp.GetTotalGospelVerses()
+	// If we've gone through all books and offset is still positive, wrap
+	// around to beginning (start over) Calculate modulo offset within total verses
+	totalVerses := dp.GetTotalVersesForMode()
 	if offset >= 0 {
 		adjustedOffset := offset % totalVerses
 		// Recursively find position for adjusted offset
@@ -87,6 +101,22 @@ func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) 
 	}
 
 	return nil, fmt.Errorf("could not find position for offset %d", offset)
+}
+
+// getBookRange returns the start and end book numbers for the current reading mode
+func (dp *DateProgression) getBookRange() (startBook, endBook int) {
+	switch dp.readingMode {
+	case ReadingModeEvangelion:
+		return 40, 43 // Matthew, Mark, Luke, John
+	case ReadingModeNewTestament:
+		return 40, 66 // Matthew through Revelation
+	case ReadingModeOldTestament:
+		return 1, 39 // Genesis through Malachi
+	case ReadingModeBible:
+		return 1, 66 // Entire Bible
+	default:
+		return 40, 43 // Default to Evangelion
+	}
 }
 
 // applyLookahead applies the lookahead rule (same as BookmarkManager.AdjustForLookahead)
@@ -108,8 +138,27 @@ func (dp *DateProgression) applyLookahead(bookmark *Bookmark) *Bookmark {
 	return bookmark
 }
 
+// GetTotalVersesForMode returns the total number of verses for the current reading mode
+func (dp *DateProgression) GetTotalVersesForMode() int {
+	total := 0
+	startBook, endBook := dp.getBookRange()
+	
+	for book := startBook; book <= endBook; book++ {
+		for chapter := 1; ; chapter++ {
+			verses := dp.bible.CountVersesInChapter(book, chapter)
+			if verses == 0 {
+				break
+			}
+			total += verses
+		}
+	}
+	return total
+}
+
 // GetTotalGospelVerses returns the total number of verses in all four Gospels
+// Deprecated: Use GetTotalVersesForMode instead
 func (dp *DateProgression) GetTotalGospelVerses() int {
+	// Calculate Gospels total (books 40-43)
 	total := 0
 	for book := 40; book <= 43; book++ {
 		for chapter := 1; ; chapter++ {
