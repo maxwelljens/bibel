@@ -94,6 +94,9 @@ func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) 
 	// If we've gone through all books and offset is still positive, wrap
 	// around to beginning (start over) Calculate modulo offset within total verses
 	totalVerses := dp.GetTotalVersesForMode()
+	if totalVerses == 0 {
+		return nil, fmt.Errorf("no verses found for reading mode %s. The Bible data file may not contain books for this reading mode", dp.readingMode)
+	}
 	if offset >= 0 {
 		adjustedOffset := offset % totalVerses
 		// Recursively find position for adjusted offset

@@ -9,6 +9,32 @@ import (
 	"github.com/spf13/viper"
 )
 
+// findBibleFileInDataDir looks for Bible JSON files in the XDG data directory
+// It returns the path to the first JSON file found, or an error if none found
+func findBibleFileInDataDir() (string, error) {
+	dataDir := filepath.Join(xdg.DataHome, "bibel")
+	
+	// Check if the directory exists
+	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
+		return "", fmt.Errorf("Bible data directory not found: %s\nPlease create this directory and add Bible JSON files to it", dataDir)
+	}
+
+	// Read the directory
+	entries, err := os.ReadDir(dataDir)
+	if err != nil {
+		return "", fmt.Errorf("error reading Bible data directory %s: %w", dataDir, err)
+	}
+
+	// Look for JSON files
+	for _, entry := range entries {
+		if !entry.IsDir() && filepath.Ext(entry.Name()) == ".json" {
+			return filepath.Join(dataDir, entry.Name()), nil
+		}
+	}
+
+	return "", fmt.Errorf("no JSON Bible files found in %s\nPlease add Bible JSON files to this directory", dataDir)
+}
+
 // Config represents the application configuration
 type Config struct {
 	// Reading mode: "evangelion", "new_testament", "old_testament", "bible"
@@ -64,7 +90,7 @@ func DefaultConfig() *Config {
 	cfg := &Config{
 		ReadingMode: "evangelion",
 		OutputMode: "tui",
-		BiblePath:  "books/pol_nbg.json",
+		BiblePath:  "", // Empty means use XDG data directory
 	}
 
 	cfg.TUI.ShowQuitMessage = true
@@ -146,6 +172,16 @@ func LoadConfig() (*Config, error) {
 	}
 	if cfg.DateProgression.VersesPerDay == 0 {
 		cfg.DateProgression.VersesPerDay = defaultCfg.DateProgression.VersesPerDay
+	}
+
+	// If BiblePath is still empty (default or from config), try to find a Bible file in XDG data directory
+	if cfg.BiblePath == "" {
+		biblePath, err := findBibleFileInDataDir()
+		if err != nil {
+			return nil, fmt.Errorf("failed to find Bible data file: %w", err)
+		}
+		cfg.BiblePath = biblePath
+		fmt.Fprintf(os.Stderr, "Using Bible file from XDG data directory: %s\n", cfg.BiblePath)
 	}
 
 	// Validate configuration

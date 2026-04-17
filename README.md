@@ -142,7 +142,7 @@ The program calculates reading position as follows:
 ├── cmd/bibel.go             # Main CLI entry point
 ├── configs/                 # Default configuration files
 │   └── config.example.toml  # The default configuration file
-├── internal/  
+├── internal/
 │   ├── config.go            # Reading and writing to config
 │   ├── dateprogression.go   # Date-based position calculation
 │   ├── verse.go             # Data structures

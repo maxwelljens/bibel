@@ -5,8 +5,9 @@
 # or "plain" (plain text without formatting)
 output_mode = "tui"
 
-# Path to Bible data file (relative to executable or absolute path)
-bible_path = "books/pol_nbg.json"
+# Path to Bible data file (relative to executable or absolute path). If empty,
+# automatically uses first JSON file found in $XDG_DATA_HOME/bibel
+bible_path = ""
 
 # Reading mode: "evangelion" (four Gospels), "new_testament", "old_testament", "bible"
 reading_mode = "evangelion"

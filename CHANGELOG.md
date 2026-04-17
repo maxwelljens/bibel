@@ -8,6 +8,36 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-04-17
+
+### Added
+
+- **XDG data directory support**: Automatic Bible file discovery in
+`$XDG_DATA_HOME/bibel`
+  - When `bible_path` is empty in configuration, program searches
+  `$XDG_DATA_HOME/bibel` for JSON files
+  - Uses first `.json` file found in the directory. Provides helpful error
+  messages when directory or Bible files are missing.
+- **Cross-platform Bible data management**: Leverages `xdg` library for
+consistent data directory paths across platforms
+
+### Changed
+
+- **Default configuration**: `bible_path` now defaults to empty string (uses
+XDG-stadnard data directory)
+- **Example configuration**: Updated `config.example.toml` with documentation
+about XDG data directory usage
+- **Error handling**: Improved error messages for missing Bible data files
+
+### Fixed
+
+- **Configuration generation**: `--generate-config` flag creates config with
+empty `bible_path` for XDG compatibility
+- **Edge case handling**: Prevent crashes when Bible file doesn't contain books
+for selected reading mode
+- **Date progression robustness**: Added check for zero total verses to prevent
+divide-by-zero panics
+
 ## [1.4.0] - 2026-04-17
 
 ### Added
