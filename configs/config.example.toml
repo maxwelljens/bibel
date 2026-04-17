@@ -1,0 +1,39 @@
+# bibel configuration file
+# Location: $XDG_CONFIG_HOME/bibel/config.toml (~/.config/bibel/config.toml)
+
+# Output mode: "tui" (interactive terminal UI), "formatted" (ANSI-coloured text),
+# or "plain" (plain text without formatting)
+output_mode = "tui"
+
+# Path to Bible data file (relative to executable or absolute path)
+bible_path = "books/pol_nbg.json"
+
+[tui]
+  # Whether to show the quit message "Press q to quit..."
+  show_quit_message = true
+  
+  # Box border style: "rounded", "double", "single", or "hidden"
+  border_style = "rounded"
+  
+  # Colours for TUI elements (empty = adaptive to terminal)
+  # Use hex colours like "#FF0000" or named colours like "red"
+  border_colour = ""    # Box border colour
+  header_colour = ""    # Header text colour  
+  text_colour = ""      # Bible text colour
+  quit_colour = ""      # Quit message colour
+
+[formatter]
+  # Whether to use ANSI colours in formatted output mode
+  use_colours = true
+  
+  # Header format template
+  # Available variables: {book}, {chapter}, {first_verse}, {second_verse}
+  header_format = "{book} {chapter}\nw. {first_verse}-{second_verse}"
+
+[date_progression]
+  # Number of verses to read per day
+  verses_per_day = 12
+  
+  # Start date for yearly progression (format: "1 January")
+  # Empty means 1 January of current year
+  start_date = ""

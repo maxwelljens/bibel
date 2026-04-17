@@ -8,6 +8,48 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-04-17
+
+### Added
+
+- **TOML configuration file** system with XDG Base Directory Specification
+compliance
+  - Configuration file location: `$XDG_CONFIG_HOME/bibel/config.toml` (default:
+  `~/.config/bibel/config.toml`). macOS and Windows also supported.
+  - Uses `xdg` for XDG compliance and `viper` for configuration management
+- **Configuration generation**: `--generate-config` flag creates default
+configuration file
+- **Comprehensive TUI aesthetic configuration**:
+  - `border_style`: "rounded", "double", "single", or "hidden"
+  - `border_colour`: Custom hex colour for box borders
+  - `header_colour`: Custom hex colour for header text
+  - `text_colour`: Custom hex colour for verse content
+  - `quit_colour`: Custom hex colour for quit message
+  - `show_quit_message`: Boolean to show/hide "Press q to quit..." message
+- **Formatter configuration**:
+  - `header_format`: Customisable header template with variables: `{book}`,
+  `{chapter}`, `{first_verse}`, `{second_verse}`
+  - `use_colours`: Enable/disable ANSI colour output in formatted mode
+- **Date progression configuration**:
+  - `verses_per_day`: Customisable number of verses per day (default: 12)
+- **Command-line override**: CLI flags (`--plain`, `--formatted`) override
+configuration settings
+- **Configuration validation**: Ensures valid output modes, border styles, and
+positive verse counts
+
+### Changed
+
+- **Formatter behaviour**: `FormatHeader()` now reads `header_format` from
+configuration instead of hardcoded format
+- **TUI styling**: All aesthetic properties (colours, border style) now
+configurable via TOML file
+- **Date progression**: `NewDateProgressionWithConfig()` accepts custom
+`verses_per_day` parameter
+- **Application flow**: Configuration loaded before processing, with
+command-line arguments taking precedence
+- **Package structure**: Added `internal/config.go` for configuration
+management
+
 ## [1.2.0] - 2026-04-16
 
 ### Added

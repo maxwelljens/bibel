@@ -7,12 +7,21 @@ import (
 
 // DateProgression handles calculating Bible position based on date
 type DateProgression struct {
-	bible *Bible
+	bible       *Bible
+	versesPerDay int
 }
 
 // NewDateProgression creates a new date progression calculator
 func NewDateProgression(bible *Bible) *DateProgression {
-	return &DateProgression{bible: bible}
+	return &DateProgression{bible: bible, versesPerDay: 12}
+}
+
+// NewDateProgressionWithConfig creates a new date progression calculator with config
+func NewDateProgressionWithConfig(bible *Bible, versesPerDay int) *DateProgression {
+	if versesPerDay <= 0 {
+		versesPerDay = 12
+	}
+	return &DateProgression{bible: bible, versesPerDay: versesPerDay}
 }
 
 // GetPositionForDate calculates the verse range for a given date
@@ -20,8 +29,8 @@ func (dp *DateProgression) GetPositionForDate(date time.Time) (*Bookmark, error)
 	// Calculate day of year (1-366)
 	dayOfYear := date.YearDay()
 
-	// Each day shows 12 verses
-	targetVerseOffset := (dayOfYear - 1) * 12 // Zero-indexed
+	// Each day shows configured number of verses
+	targetVerseOffset := (dayOfYear - 1) * dp.versesPerDay // Zero-indexed
 
 	// Walk through Gospels to find the position
 	return dp.findPositionForOffset(targetVerseOffset)
@@ -50,7 +59,7 @@ func (dp *DateProgression) findPositionForOffset(offset int) (*Bookmark, error) 
 				firstVerse := offset + 1 // Convert from 0-indexed to 1-indexed
 
 				// Create initial bookmark (like AdvanceBookmark does)
-				secondVerse := min(firstVerse+11, versesInChapter)
+				secondVerse := min(firstVerse+dp.versesPerDay-1, versesInChapter)
 				bookmark := &Bookmark{
 					Book:        BookIndex(book),
 					Chapter:     chapter,
@@ -85,8 +94,8 @@ func (dp *DateProgression) applyLookahead(bookmark *Bookmark) *Bookmark {
 	versesInChapter := dp.bible.CountVersesInChapter(int(bookmark.Book), bookmark.Chapter)
 	versesRemaining := versesInChapter - bookmark.SecondVerse
 
-	// If we're not at the end of the chapter and less than 12 verses remain for NEXT snippet
-	if versesRemaining > 0 && versesRemaining < 12 {
+	// If we're not at the end of the chapter and less than dp.versesPerDay verses remain for NEXT snippet
+	if versesRemaining > 0 && versesRemaining < dp.versesPerDay {
 		return &Bookmark{
 			Book:        bookmark.Book,
 			Chapter:     bookmark.Chapter,
@@ -113,4 +122,3 @@ func (dp *DateProgression) GetTotalGospelVerses() int {
 	}
 	return total
 }
-

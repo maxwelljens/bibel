@@ -10,14 +10,15 @@ import (
 
 // Model represents the TUI application state
 type Model struct {
-	bibleData *bible.Bible
-	bookmark  *bible.Bookmark
-	width     int
-	height    int
-	quitting  bool
-	plainMode bool
-	styles    *Styles
-	formatter *bible.Formatter
+	bibleData  *bible.Bible
+	bookmark   *bible.Bookmark
+	width      int
+	height     int
+	quitting   bool
+	outputMode string
+	styles     *Styles
+	formatter  *bible.Formatter
+	config     *bible.Config
 }
 
 // Styles contains the lipgloss styles for the TUI
@@ -29,19 +30,20 @@ type Styles struct {
 }
 
 // NewModel creates a new TUI model with the given Bible data and bookmark
-func NewModel(bibleData *bible.Bible, bookmark *bible.Bookmark, plainMode bool) Model {
+func NewModel(bibleData *bible.Bible, bookmark *bible.Bookmark, config *bible.Config) Model {
 	m := Model{
-		bibleData: bibleData,
-		bookmark:  bookmark,
-		plainMode: plainMode,
-		styles:    createStyles(),
-		formatter: &bible.Formatter{},
+		bibleData:  bibleData,
+		bookmark:   bookmark,
+		outputMode: config.OutputMode,
+		styles:     createStyles(config),
+		formatter:  bible.NewFormatterWithConfig(config.Formatter.UseColours, config.Formatter.HeaderFormat),
+		config:     config,
 	}
 	return m
 }
 
-// createStyles creates the lipgloss styles, adapting to terminal background color
-func createStyles() *Styles {
+// createStyles creates the lipgloss styles based on configuration
+func createStyles(config *bible.Config) *Styles {
 	// Detect if terminal has dark background
 	hasDarkBG := lipgloss.HasDarkBackground()
 
@@ -53,30 +55,69 @@ func createStyles() *Styles {
 		return light
 	}
 
-	// Colors that match the existing formatter colors (green/yellow)
-	// but adapted for light/dark backgrounds
-	green := lightDark(lipgloss.Color("#00AA00"), lipgloss.Color("#00FF00"))
-	borderColor := lightDark(lipgloss.Color("#666666"), lipgloss.Color("#999999"))
-	textColor := lightDark(lipgloss.Color("#000000"), lipgloss.Color("#FFFFFF"))
-	quitColor := lightDark(lipgloss.Color("#555555"), lipgloss.Color("#AAAAAA"))
+	// Get colours from config, or use adaptive defaults
+	var borderColour, headerColour, textColour, quitColour lipgloss.TerminalColor
+
+	// Border colour
+	if config.TUI.BorderColour != "" {
+		borderColour = lipgloss.Color(config.TUI.BorderColour)
+	} else {
+		borderColour = lightDark(lipgloss.Color("#666666"), lipgloss.Color("#999999"))
+	}
+
+	// Header colour (matching formatter's green)
+	if config.TUI.HeaderColour != "" {
+		headerColour = lipgloss.Color(config.TUI.HeaderColour)
+	} else {
+		headerColour = lightDark(lipgloss.Color("#00AA00"), lipgloss.Color("#00FF00"))
+	}
+
+	// Text colour
+	if config.TUI.TextColour != "" {
+		textColour = lipgloss.Color(config.TUI.TextColour)
+	} else {
+		textColour = lightDark(lipgloss.Color("#000000"), lipgloss.Color("#FFFFFF"))
+	}
+
+	// Quit message colour
+	if config.TUI.QuitColour != "" {
+		quitColour = lipgloss.Color(config.TUI.QuitColour)
+	} else {
+		quitColour = lightDark(lipgloss.Color("#555555"), lipgloss.Color("#AAAAAA"))
+	}
+
+	// Create border style based on config
+	var border lipgloss.Border
+	switch config.TUI.BorderStyle {
+	case "double":
+		border = lipgloss.DoubleBorder()
+	case "single":
+		border = lipgloss.NormalBorder()
+	case "hidden":
+		border = lipgloss.HiddenBorder()
+	case "rounded":
+		fallthrough
+	default:
+		border = lipgloss.RoundedBorder()
+	}
 
 	return &Styles{
 		box: lipgloss.NewStyle().
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(borderColor).
+			Border(border).
+			BorderForeground(borderColour).
 			Padding(1, 2).
 			Margin(1, 0),
 
 		header: lipgloss.NewStyle().
-			Foreground(green).
+			Foreground(headerColour).
 			Bold(true).
 			MarginBottom(1),
 
 		content: lipgloss.NewStyle().
-			Foreground(textColor),
+			Foreground(textColour),
 
 		quitMessage: lipgloss.NewStyle().
-			Foreground(quitColor).
+			Foreground(quitColour).
 			Italic(true).
 			MarginTop(1),
 	}
@@ -116,8 +157,8 @@ func (m Model) View() string {
 	header := m.formatter.FormatHeader(m.bookmark)
 	content := m.formatter.ExtractAndFormat(m.bibleData, m.bookmark)
 
-	// In plain mode, just return the original formatted text (with ANSI colors)
-	if m.plainMode {
+	// In plain or formatted mode, just return the original formatted text
+	if m.outputMode == "plain" || m.outputMode == "formatted" {
 		var output strings.Builder
 		output.WriteString(header)
 		output.WriteString("\n")
@@ -157,16 +198,21 @@ func (m Model) View() string {
 	// Create the box with max width constraint
 	box := m.styles.box.MaxWidth(availableWidth).Render(boxContent.String())
 
-	// Add quit message below the box
-	quitMsg := m.styles.quitMessage.Render("Press q to quit...")
+	// Add quit message below the box if configured to show it
+	var fullOutput string
+	if m.config.TUI.ShowQuitMessage {
+		quitMsg := m.styles.quitMessage.Render("Press q to quit...")
+		fullOutput = lipgloss.JoinVertical(lipgloss.Center, box, quitMsg)
+	} else {
+		fullOutput = lipgloss.JoinVertical(lipgloss.Center, box)
+	}
 
-	// Combine box and quit message
-	return lipgloss.JoinVertical(lipgloss.Center, box, quitMsg)
+	return fullOutput
 }
 
 // CreateTUIProgram creates and returns a bubbletea program for the Bible verse
-func CreateTUIProgram(bible *bible.Bible, bookmark *bible.Bookmark, plainMode bool) *tea.Program {
-	model := NewModel(bible, bookmark, plainMode)
+func CreateTUIProgram(bible *bible.Bible, bookmark *bible.Bookmark, config *bible.Config) *tea.Program {
+	model := NewModel(bible, bookmark, config)
 	return tea.NewProgram(model)
 }
 

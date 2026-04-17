@@ -6,7 +6,8 @@ per day through the four Gospels.
 
 ## Features
 
-- **Interactive TUI**: Terminal User Interface using `bubbletea` with styled boxes
+- **Interactive TUI**: Terminal User Interface using `bubbletea` with styled
+boxes
 - **Date-Based Progression**: Automatically calculates position based on day of
 year (1 January = Matthew 1:1-12)
 - **Smart Sizing**: Default snippet size is 12 verses, extends to end of
@@ -29,18 +30,73 @@ go build ./cmd/bibel.go
 ./bibel
 ```
 
-The program will:
-1. Calculate today's date and day of year
-2. Determine Bible position: day_of_year × 12 verses
+By default, the verses the program picks are done by:
+1. Calculating today's date and day of year
+2. Determining Bible position: day of year * 12 verses
 3. Find corresponding verses in the Gospels
-4. Display the Bible snippet with colored headers
 
-No bookmark file is needed or created - the position is calculated from the
-date alone.
+This is default behaviour. Alternative configurations are available (see
+below).
+
+## Configuration
+
+`bibel` supports configuration via a TOML file located at
+`$XDG_CONFIG_HOME/bibel/config.toml` (default: `~/.config/bibel/config.toml`).
+Default macOS and Windows paths are also supported.
+
+### Configuration Options
+
+- **output_mode**: Output mode: "tui" (interactive terminal UI), "formatted"
+(ANSI-coloured text), or "plain" (plain text)
+- **bible_path**: Path to Bible data file (default: "books/pol_nbg.json")
+
+#### TUI Settings (`[tui]` section)
+- **show_quit_message**: Whether to show "Press q to quit..." message (default:
+true)
+- **border_style**: Box border style: "rounded", "double", "single", or
+"hidden" (default: "rounded")
+- **border_colour**: Box border colour (hex or named colour, empty for
+adaptive)
+- **header_colour**: Header text colour (empty for adaptive)
+- **text_colour**: Bible text colour (empty for adaptive)
+- **quit_colour**: Quit message colour (empty for adaptive)
+
+#### Formatter Settings (`[formatter]` section)
+- **use_colours**: Whether to use ANSI colours in formatted output (default:
+true)
+- **header_format**: Header format template with variables: {book}, {chapter},
+{first_verse}, {second_verse}
+
+#### Date Progression Settings (`[date_progression]` section)
+- **verses_per_day**: Number of verses to read per day (default: 12)
+- **start_date**: Start date for yearly progression (format: "1 January", empty
+for current year)
+
+### Example Configuration
+
+See `configs/config.example.toml` in the project directory for a complete example.
+
+### Generating Configuration
+
+Generate a default configuration file:
+
+```bash
+./bibel --generate-config
+```
+
+### Command Line Arguments
+
+Command line arguments override configuration file settings:
+
+- `-p, --plain`: Output plain text without formatting or TUI
+- `-f, --formatted`: Output formatted text with ANSI colours (no TUI)
+- `-g, --generate-config`: Generate a default configuration file and exit
+- `-c, --config`: Path to configuration file (not yet implemented)
 
 ## Data Format
 
-The Bible data is in JSON format (`books/pol_nbg.json`) with the following structure:
+The Bible data is in JSON format (see `books/pol_nbg.json`) with the following
+structure:
 ```json
 {
   "metadata": { ... },
@@ -68,8 +124,10 @@ Books 40-43 correspond to the four Gospels:
 The program calculates reading position as follows:
 
 1. **Day of Year**: Get current day number (1-366)
-2. **Verse Offset**: Multiply by 12 verses per day: `offset = (day_of_year - 1) × 12`
-3. **Modulo Wrap**: Apply modulo with total Gospel verses (3779) to cycle yearly
+2. **Verse Offset**: Multiply by 12 verses per day: `offset = (day_of_year - 1)
+   × 12`
+3. **Modulo Wrap**: Apply modulo with total Gospel verses (3779) to cycle
+   yearly
 4. **Position Mapping**: Walk through Gospels to find corresponding verses
 5. **Lookahead Rule**: Extend to chapter end if less than 12 verses remain
 
@@ -77,18 +135,21 @@ The program calculates reading position as follows:
 
 ```
 .
-├── cmd/bibel.go            # Main CLI entry point
-├── internal/
-│   ├── bible/              # Core Bible functionality
-│   ├── verse.go            # Data structures
-│   ├── loader.go           # JSON loading and indexing
-│   ├── dateprogression.go  # Date-based position calculation
-│   ├── formatter.go        # Output formatting
-│   └── tui/                # Terminal User Interface
-│       └── model.go        # bubbletea TUI model and styling
-├── books/pol_nbg.json      # Bible data
-├── go.mod                  # Go module dependencies
-└── go.sum                  # Go dependency checksums
+├── cmd/bibel.go             # Main CLI entry point
+├── configs/                 # Default configuration files
+│   └── config.example.toml  # The default configuration file
+├── internal/  
+│   ├── bible/               # Core Bible functionality
+│   ├── config.go            # Reading and writing to config
+│   ├── dateprogression.go   # Date-based position calculation
+│   ├── verse.go             # Data structures
+│   ├── loader.go            # JSON loading and indexing
+│   ├── formatter.go         # Output formatting
+│   └── tui/                 # Terminal User Interface
+│       └── model.go         # bubbletea TUI model and styling
+├── books/pol_nbg.json       # Bible data
+├── go.mod                   # Go module dependencies
+└── go.sum                   # Go dependency checksums
 ```
 
 ## Examples
