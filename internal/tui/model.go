@@ -26,6 +26,7 @@ type Styles struct {
 	box         lipgloss.Style
 	header      lipgloss.Style
 	content     lipgloss.Style
+	numberStyle lipgloss.Style // For numbered verse output
 	quitMessage lipgloss.Style
 }
 
@@ -36,7 +37,7 @@ func NewModel(bibleData *bible.Bible, bookmark *bible.Bookmark, config *bible.Co
 		bookmark:   bookmark,
 		outputMode: config.OutputMode,
 		styles:     createStyles(config),
-		formatter:  bible.NewFormatterWithConfig(bibleData, config.Formatter.UseColours, config.Formatter.HeaderFormat),
+		formatter:  bible.NewFormatterWithFullConfig(bibleData, config.Formatter.UseColours, config.Formatter.HeaderFormat, config.Formatter.Numbered, config.Formatter.Paragraphs),
 		config:     config,
 	}
 	return m
@@ -116,6 +117,10 @@ func createStyles(config *bible.Config) *Styles {
 		content: lipgloss.NewStyle().
 			Foreground(textColour),
 
+		numberStyle: lipgloss.NewStyle().
+			Foreground(lightDark(lipgloss.Color("#444444"), lipgloss.Color("#AAAAAA"))).
+			Bold(false),
+
 		quitMessage: lipgloss.NewStyle().
 			Foreground(quitColour).
 			Italic(true).
@@ -157,6 +162,10 @@ func (m Model) View() string {
 	header := m.formatter.FormatHeader(m.bookmark)
 	content := m.formatter.ExtractAndFormat(m.bibleData, m.bookmark)
 
+	// For TUI mode, use special formatting
+	verses := m.bibleData.GetVerseRange(int(m.bookmark.Book), m.bookmark.Chapter,
+		m.bookmark.FirstVerse, m.bookmark.SecondVerse)
+
 	// In plain or formatted mode, just return the original formatted text
 	if m.outputMode == "plain" || m.outputMode == "formatted" {
 		var output strings.Builder
@@ -191,9 +200,20 @@ func (m Model) View() string {
 		30)
 	contentWidth := availableWidth - 6 // Account for box frame
 
-	// Apply width constraint for text wrapping
-	wrappedContent := m.styles.content.Width(contentWidth).Render(content)
-	boxContent.WriteString(wrappedContent)
+	// Format verses with appropriate styling
+	var verseContent string
+	if m.config.Formatter.Numbered || m.config.Formatter.Paragraphs {
+		// Use TUI-aware formatting for numbered or paragraph mode
+		verseContent = m.formatter.FormatSnippetForTUI(verses, 
+			m.styles.content, 
+			m.styles.numberStyle,
+			contentWidth)
+	} else {
+		// Use regular formatting
+		wrappedContent := m.styles.content.Width(contentWidth).Render(content)
+		verseContent = wrappedContent
+	}
+	boxContent.WriteString(verseContent)
 
 	// Create the box with max width constraint
 	box := m.styles.box.MaxWidth(availableWidth).Render(boxContent.String())
@@ -240,4 +260,12 @@ func stripANSI(str string) string {
 	}
 
 	return result.String()
+}
+
+// max returns the larger of two integers
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }

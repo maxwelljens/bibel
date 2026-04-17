@@ -73,6 +73,12 @@ type Config struct {
 
 		// Header format template (default: "{book} {chapter}\nw. {first_verse}-{second_verse}")
 		HeaderFormat string `toml:"header_format" mapstructure:"header_format"`
+
+		// Whether to print each verse on a numbered line (default: false)
+		Numbered bool `toml:"numbered" mapstructure:"numbered"`
+
+		// Whether to render pilcrows (¶) as blank lines instead of ignoring them (default: false)
+		Paragraphs bool `toml:"paragraphs" mapstructure:"paragraphs"`
 	} `toml:"formatter" mapstructure:"formatter"`
 
 	// Date progression settings
@@ -102,6 +108,8 @@ func DefaultConfig() *Config {
 
 	cfg.Formatter.UseColours = true
 	cfg.Formatter.HeaderFormat = "{book} {chapter}\nw. {first_verse}-{second_verse}"
+	cfg.Formatter.Numbered = false
+	cfg.Formatter.Paragraphs = false
 
 	cfg.DateProgression.VersesPerDay = 12
 	cfg.DateProgression.StartDate = "" // Empty means 1 January of current year
@@ -135,6 +143,8 @@ func LoadConfig() (*Config, error) {
 	viper.SetDefault("tui.quit_colour", defaultCfg.TUI.QuitColour)
 	viper.SetDefault("formatter.use_colours", defaultCfg.Formatter.UseColours)
 	viper.SetDefault("formatter.header_format", defaultCfg.Formatter.HeaderFormat)
+	viper.SetDefault("formatter.numbered", defaultCfg.Formatter.Numbered)
+	viper.SetDefault("formatter.paragraphs", defaultCfg.Formatter.Paragraphs)
 	viper.SetDefault("date_progression.verses_per_day", defaultCfg.DateProgression.VersesPerDay)
 	viper.SetDefault("date_progression.start_date", defaultCfg.DateProgression.StartDate)
 
@@ -206,6 +216,8 @@ func SaveConfig(cfg *Config) error {
 	viper.Set("tui.quit_colour", cfg.TUI.QuitColour)
 	viper.Set("formatter.use_colours", cfg.Formatter.UseColours)
 	viper.Set("formatter.header_format", cfg.Formatter.HeaderFormat)
+	viper.Set("formatter.numbered", cfg.Formatter.Numbered)
+	viper.Set("formatter.paragraphs", cfg.Formatter.Paragraphs)
 	viper.Set("date_progression.verses_per_day", cfg.DateProgression.VersesPerDay)
 	viper.Set("date_progression.start_date", cfg.DateProgression.StartDate)
 

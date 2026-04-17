@@ -16,8 +16,10 @@ type Args struct {
 	Reading string `arg:"-r,--reading" help:"reading mode: evangelion (Gospels), new_testament, old_testament, bible (default: evangelion)"`
 	Plain bool `arg:"-p,--plain" help:"output plain text without formatting or TUI"`
 	Formatted bool `arg:"-f,--formatted" help:"output formatted text with ANSI colours (no TUI)"`
-	GenerateConfig bool `arg:"-g,--generate-config" help:"generate a default configuration file and exit"`
+	GenerateConfig bool `arg:"--generate-config" help:"generate a default configuration file and exit"`
 	ConfigPath string `arg:"-c,--config" help:"path to configuration file (default: $XDG_CONFIG_HOME/bibel/config.toml)"`
+	Numbered bool `arg:"-n,--numbered" help:"print each verse on a numbered line with verse number"`
+	Paragraphs bool `arg:"-g,--paragraphs" help:"render pilcrows (¶) as blank lines instead of ignoring them"`
 }
 
 // Description returns a description of the program
@@ -58,6 +60,12 @@ func main() {
 	} else if args.Formatted {
 		cfg.OutputMode = "formatted"
 	}
+	if args.Numbered {
+		cfg.Formatter.Numbered = args.Numbered
+	}
+	if args.Paragraphs {
+		cfg.Formatter.Paragraphs = args.Paragraphs
+	}
 	if args.ConfigPath != "" {
 		// Note: This would require modifying LoadConfig to accept a path
 		// For now, we'll just use the default XDG location
@@ -97,12 +105,12 @@ func main() {
 	// Handle different output modes
 	switch outputMode {
 	case "plain":
-		formatter := bible.NewFormatterWithConfig(bibleData, false, cfg.Formatter.HeaderFormat)
+		formatter := bible.NewFormatterWithFullConfig(bibleData, false, cfg.Formatter.HeaderFormat, cfg.Formatter.Numbered, cfg.Formatter.Paragraphs)
 		// In plain mode, we don't print the header
 		fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
 		
 	case "formatted":
-		formatter := bible.NewFormatterWithConfig(bibleData, cfg.Formatter.UseColours, cfg.Formatter.HeaderFormat)
+		formatter := bible.NewFormatterWithFullConfig(bibleData, cfg.Formatter.UseColours, cfg.Formatter.HeaderFormat, cfg.Formatter.Numbered, cfg.Formatter.Paragraphs)
 		fmt.Println(formatter.FormatHeader(todayBookmark))
 		fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
 		

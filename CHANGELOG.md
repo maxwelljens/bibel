@@ -8,7 +8,31 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
-## [1.5.0] - 2026-04-17
+## [0.8.0] - 2026-04-17
+
+### Added
+
+- **Verse numbering option**: New `-n/--numbered` flag prints each verse on a
+numbered line with verse number
+- **Paragraph handling option**: New `-g/--paragraphs` flag renders pilcrows
+(¶) as blank lines instead of ignoring them
+- **TUI numbered styling**: Verse numbers use darker shade styling via
+`lipgloss` for better readability
+- **Configuration integration**: Both options configurable via TOML file in
+`[formatter]` section (`numbered` and `paragraphs` fields)
+
+### Changed
+
+- **Formatter system enhanced**: New `FormatSnippetWithOptions()` and
+`FormatSnippetForTUI()` methods for advanced formatting
+- **TUI width handling**: Improved width calculations for numbered verses to
+prevent text clipping
+- **Paragraph logic refined**: Fixed newline handling to only insert blank
+lines for pilcrows, not between all verses
+- **Phased out short flag**: `--generate-config` no longer has the `-g` short
+flag. This is now under `--paragraphs`.
+
+## [0.7.0] - 2026-04-17
 
 ### Added
 
@@ -38,7 +62,7 @@ for selected reading mode
 - **Date progression robustness**: Added check for zero total verses to prevent
 divide-by-zero panics
 
-## [1.4.0] - 2026-04-17
+## [0.6.0] - 2026-04-17
 
 ### Added
 
@@ -76,7 +100,7 @@ divide-by-zero panics
 - **Build errors**: Fixed Go compilation issues in configuration unmarshalling
 - **Backward compatibility**: Maintains existing behavior for default mode
 
-## [1.3.0] - 2026-04-17
+## [0.5.0] - 2026-04-17
 
 ### Added
 
@@ -118,7 +142,7 @@ command-line arguments taking precedence
 - **Package structure**: Added `internal/config.go` for configuration
 management
 
-## [1.2.0] - 2026-04-16
+## [0.4.0] - 2026-04-16
 
 ### Added
 
@@ -143,7 +167,7 @@ header or TUI)
 colours
 - **Dependencies**: Added `bubbletea` and `lipgloss` for TUI functionality
 
-## [1.1.0] - 2026-04-16
+## [0.3.0] - 2026-04-16
 
 ### Added
 
@@ -151,7 +175,7 @@ colours
 - `-p/--plain` flag to output plain text without chapter name or verse numbers
 - Program description and help text
 
-## [1.0.0] - 2026-04-16
+## [0.2.0] - 2026-04-16
 
 ### Added
 

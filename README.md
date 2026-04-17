@@ -17,6 +17,10 @@ chapter if less than 12 verses remain
 - **Yearly Cycle**: Progresses through all four Gospels each year, restarting
 on 1 January
 - **Multiple Output Modes**: Interactive TUI, formatted ANSI, or plain text
+- **Verse Numbering**: Option to print each verse on a numbered line with verse
+numbers
+- **Paragraph Handling**: Option to render pilcrows (¶) in source JSON Bible
+file as paragraph breaks with blank lines
 
 ## Installation
 
@@ -34,6 +38,34 @@ By default, the verses the program picks are done by:
 1. Calculating today's date and day of year
 2. Determining Bible position: day of year * 12 verses
 3. Find corresponding verses in the Gospels
+
+### Usage Examples
+
+```bash
+# Default TUI mode with interactive display
+./bibel
+
+# Plain text output
+./bibel --plain
+
+# Formatted output with ANSI colours
+./bibel --formatted
+
+# Numbered verses (each verse on its own line with verse number)
+./bibel --numbered
+
+# Paragraph mode (pilcrows render as blank lines)
+./bibel --paragraphs
+
+# Combine numbered and paragraph modes
+./bibel --numbered --paragraphs
+
+# Plain output with numbered verses
+./bibel --plain --numbered
+
+# Generate configuration file
+./bibel --generate-config
+```
 
 This is default behaviour. Alternative configurations are available (see
 below).
@@ -68,6 +100,10 @@ adaptive)
 true)
 - **header_format**: Header format template with variables: {book}, {chapter},
 {first_verse}, {second_verse}
+- **numbered**: Whether to print each verse on a numbered line corresponding to
+the verse number (default: false)
+- **paragraphs**: Whether to render pilcrows (¶) as blank lines instead of
+ignoring them (default: false)
 
 #### Date Progression Settings (`[date_progression]` section)
 - **verses_per_day**: Number of verses to read per day (default: 12)
@@ -96,6 +132,8 @@ Command line arguments override configuration file settings:
 - `-f, --formatted`: Output formatted text with ANSI colours (no TUI)
 - `-g, --generate-config`: Generate a default configuration file and exit
 - `-c, --config`: Path to configuration file (not yet implemented)
+- `-n, --numbered`: Print each verse on a numbered line corresponding to the verse number
+- `-g, --paragraphs`: Render pilcrows (¶) as blank lines instead of ignoring them
 
 ## Data Format
 

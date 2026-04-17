@@ -33,6 +33,12 @@ reading_mode = "evangelion"
   # Header format template
   # Available variables: {book}, {chapter}, {first_verse}, {second_verse}
   header_format = "{book} {chapter}\nw. {first_verse}-{second_verse}"
+  
+  # Whether to print each verse on a numbered line with verse number
+  numbered = false
+  
+  # Whether to render pilcrows (¶) as blank lines instead of ignoring them
+  paragraphs = false
 
 [date_progression]
   # Number of verses to read per day
