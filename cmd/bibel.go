@@ -13,13 +13,15 @@ import (
 
 // Args defines the command line arguments
 type Args struct {
-	Reading string `arg:"-r,--reading" help:"reading mode: evangelion (Gospels), new_testament, old_testament, bible (default: evangelion)"`
-	Plain bool `arg:"-p,--plain" help:"output plain text without formatting or TUI"`
-	Formatted bool `arg:"-f,--formatted" help:"output formatted text with ANSI colours (no TUI)"`
-	GenerateConfig bool `arg:"--generate-config" help:"generate a default configuration file and exit"`
-	ConfigPath string `arg:"-c,--config" help:"path to configuration file (default: $XDG_CONFIG_HOME/bibel/config.toml)"`
-	Numbered bool `arg:"-n,--numbered" help:"print each verse on a numbered line with verse number"`
-	Paragraphs bool `arg:"-g,--paragraphs" help:"render pilcrows (¶) as blank lines instead of ignoring them"`
+	Reading        string `arg:"-r,--reading" help:"reading mode: evangelion (Gospels), new_testament, old_testament, bible (default: evangelion)"`
+	Plain          bool   `arg:"-p,--plain" help:"output plain text without formatting or TUI"`
+	Formatted      bool   `arg:"-f,--formatted" help:"output formatted text with ANSI colours (no TUI)"`
+	ConfigPath     string `arg:"-c,--config" help:"path to configuration file (default: $XDG_CONFIG_HOME/bibel/config.toml)"`
+	Numbered       bool   `arg:"-n,--numbered" help:"print each verse on a numbered line with verse number"`
+	Paragraphs     bool   `arg:"-g,--paragraphs" help:"render pilcrows (¶) as blank lines instead of ignoring them"`
+	Latin          bool   `arg:"-l,--latin" help:"show time until Roman Catholic Easter"`
+	GenerateConfig bool   `arg:"--generate-config" help:"generate a default configuration file and exit"`
+	Verbose        bool   `arg:"-v,--verbose" help:"print additional runtime information to STDOUT"`
 }
 
 // Description returns a description of the program
@@ -45,86 +47,82 @@ func main() {
 	}
 
 	// Load configuration
-	cfg, err := bible.LoadConfig()
+	config, err := bible.LoadConfig()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error loading configuration: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 		os.Exit(1)
 	}
 
-	// Override config with command line arguments
+	// Override Easter type from command line flag if specified
+	if args.Latin {
+		config.EasterType = "latin"
+	}
+
+	// Override reading mode from command line if specified
 	if args.Reading != "" {
-		cfg.ReadingMode = args.Reading
-	}
-	if args.Plain {
-		cfg.OutputMode = "plain"
-	} else if args.Formatted {
-		cfg.OutputMode = "formatted"
-	}
-	if args.Numbered {
-		cfg.Formatter.Numbered = args.Numbered
-	}
-	if args.Paragraphs {
-		cfg.Formatter.Paragraphs = args.Paragraphs
-	}
-	if args.ConfigPath != "" {
-		// Note: This would require modifying LoadConfig to accept a path
-		// For now, we'll just use the default XDG location
-		fmt.Fprintf(os.Stderr, "Note: Custom config path not yet implemented, using default location\n")
+		config.ReadingMode = args.Reading
 	}
 
 	// Load Bible data
-	biblePath := cfg.BiblePath
-	bibleData, err := bible.LoadBible(biblePath)
+	bibleData, err := bible.LoadBible(config.BiblePath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading Bible data: %v\n", err)
 		os.Exit(1)
 	}
 
-	// Initialise date progression with configured verses per day
-	dateProg := bible.NewDateProgressionWithReadingMode(bibleData, cfg.DateProgression.VersesPerDay, bible.ReadingMode(cfg.ReadingMode))
+	// Create date progression calculator
+	// We need to convert reading mode string to ReadingMode type
+	// Based on verse.go, ReadingMode is a string type with constants
+	dateProg := bible.NewDateProgression(bibleData)
 
-	// Get current date
-	currentDate := time.Now()
-
-	// Calculate position for today
-	todayBookmark, err := dateProg.GetPositionForDate(currentDate)
+	// Get today's bookmark
+	bookmark, err := dateProg.GetPositionForDate(time.Now())
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error calculating date position: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error calculating today's reading position: %v\n", err)
 		os.Exit(1)
 	}
 
-	// Determine output mode based on configuration and terminal
-	outputMode := cfg.OutputMode
-	
-	// If terminal detection suggests different mode, adjust
-	if !term.IsTerminal(int(os.Stdout.Fd())) && outputMode == "tui" {
-		// Not a terminal, fall back to formatted
-		outputMode = "formatted"
+	// Handle plain output mode
+	if args.Plain {
+		formatter := bible.NewFormatter(bibleData)
+		header := formatter.FormatHeader(bookmark)
+		content := formatter.ExtractAndFormat(bibleData, bookmark)
+		fmt.Println(header)
+		fmt.Println(content)
+		return
 	}
 
-	// Handle different output modes
-	switch outputMode {
-	case "plain":
-		formatter := bible.NewFormatterWithFullConfig(bibleData, false, cfg.Formatter.HeaderFormat, cfg.Formatter.Numbered, cfg.Formatter.Paragraphs)
-		// In plain mode, we don't print the header
-		fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
-		
-	case "formatted":
-		formatter := bible.NewFormatterWithFullConfig(bibleData, cfg.Formatter.UseColours, cfg.Formatter.HeaderFormat, cfg.Formatter.Numbered, cfg.Formatter.Paragraphs)
-		fmt.Println(formatter.FormatHeader(todayBookmark))
-		fmt.Println(formatter.ExtractAndFormat(bibleData, todayBookmark))
-		
-	case "tui":
-		// Create and run TUI program with configuration
-		program := tui.CreateTUIProgram(bibleData, todayBookmark, cfg)
-		if err := program.Start(); err != nil {
-			fmt.Fprintf(os.Stderr, "Error running TUI: %v\n", err)
-			os.Exit(1)
-		}
-		
-	default:
-		fmt.Fprintf(os.Stderr, "Unknown output mode: %s\n", outputMode)
-		fmt.Fprintf(os.Stderr, "Valid modes: tui, formatted, plain\n")
+	// Handle formatted output mode
+	if args.Formatted {
+		formatter := bible.NewFormatterWithConfig(bibleData, config.Formatter.UseColours, config.Formatter.HeaderFormat)
+		header := formatter.FormatHeader(bookmark)
+		content := formatter.ExtractAndFormat(bibleData, bookmark)
+		fmt.Println(header)
+		fmt.Println(content)
+		return
+	}
+
+	// Handle numbered/paragraph options
+	if args.Numbered || args.Paragraphs {
+		formatter := bible.NewFormatterWithFullConfig(bibleData, config.Formatter.UseColours, config.Formatter.HeaderFormat, args.Numbered, args.Paragraphs)
+		header := formatter.FormatHeader(bookmark)
+		content := formatter.ExtractAndFormat(bibleData, bookmark)
+		fmt.Println(header)
+		fmt.Println(content)
+		return
+	}
+
+	// Default: TUI mode
+	// Check if we're in a terminal
+	if !term.IsTerminal(int(os.Stdin.Fd())) {
+		fmt.Fprintln(os.Stderr, "Error: Standard input is not a terminal. Use --plain or --formatted for non-interactive output.")
+		os.Exit(1)
+	}
+
+	// Create and run TUI program
+	program := tui.CreateTUIProgram(bibleData, bookmark, config)
+	if _, err := program.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "Error running TUI: %v\n", err)
 		os.Exit(1)
 	}
 }

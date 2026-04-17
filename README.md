@@ -21,6 +21,8 @@ on 1 January
 numbers
 - **Paragraph Handling**: Option to render pilcrows (¶) in source JSON Bible
 file as paragraph breaks with blank lines
+- **Easter Progress Bar**: Fancy progress bar showing time until Easter with
+visual progress indication (default: Eastern Orthodox; Catholic with `-l` flag)
 
 ## Installation
 
@@ -42,8 +44,11 @@ By default, the verses the program picks are done by:
 ### Usage Examples
 
 ```bash
-# Default TUI mode with interactive display
+# Default TUI mode with interactive display (shows Orthodox Easter progress)
 ./bibel
+
+# Roman Catholic Easter progress bar instead of Orthodox
+./bibel --latin
 
 # Plain text output
 ./bibel --plain
@@ -110,6 +115,9 @@ ignoring them (default: false)
 - **start_date**: Start date for yearly progression (format: "1 January", empty
 for current year)
 
+#### Easter Settings
+- **easter_type**: Easter calculation type: "orthodox" (default) or "latin"
+
 ### Example Configuration
 
 See `configs/config.example.toml` in the project directory for a complete example.
@@ -134,6 +142,7 @@ Command line arguments override configuration file settings:
 - `-c, --config`: Path to configuration file (not yet implemented)
 - `-n, --numbered`: Print each verse on a numbered line corresponding to the verse number
 - `-g, --paragraphs`: Render pilcrows (¶) as blank lines instead of ignoring them
+- `-l, --latin`: Use Roman Catholic Easter instead of Eastern Orthodox (shows in TUI progress bar)
 
 ## Data Format
 
@@ -173,6 +182,26 @@ The program calculates reading position as follows:
 4. **Position Mapping**: Walk through Gospels to find corresponding verses
 5. **Lookahead Rule**: Extend to chapter end if less than 12 verses remain
 
+## Easter Progress Bar
+
+The TUI features a progress bar showing time until the next Easter:
+
+### Easter Type Selection
+- **Default**: Eastern Orthodox Easter (calculated via Meeus Julian algorithm)
+- **Catholic**: Roman Catholic Easter via `-l/--latin` flag (Delambre and Butcher's algorithm)
+
+### Progress Bar Features
+- **Visual Progress**: Filled segments (█) showing annual cycle percentage between consecutive Easters
+- **Time Display**: Shows exact days, hours, and minutes until next Easter
+- **Styling**: Uses `lipgloss` with green-filled segments and adaptive terminal colours
+- **Configuration**: Easter type configurable via `easter_type` field in TOML configuration
+
+### Easter Calculations
+- **Orthodox Easter**: Uses Meeus Julian algorithm (accurate for years > 325)
+- **Catholic Easter**: Uses Delambre and Butcher's algorithm (Gregorian calendar)
+- **Annual Cycle Progress**: Calculated as time elapsed between consecutive Easters
+- **Real-time Updates**: Progress updates continuously while TUI is running
+
 ## Project Structure
 
 ```
@@ -183,11 +212,14 @@ The program calculates reading position as follows:
 ├── internal/
 │   ├── config.go            # Reading and writing to config
 │   ├── dateprogression.go   # Date-based position calculation
+│   ├── easterprogression.go # Easter date and progress calculation
 │   ├── verse.go             # Data structures
 │   ├── loader.go            # JSON loading and indexing
 │   ├── formatter.go         # Output formatting
 │   └── tui/                 # Terminal User Interface
 │       └── model.go         # bubbletea TUI model and styling
+├── pkg/
+│   └── eastertime.go        # Easter date calculation algorithms (Orthodox/Catholic)
 ├── books/pol_nbg.json       # Bible data
 ├── go.mod                   # Go module dependencies
 └── go.sum                   # Go dependency checksums

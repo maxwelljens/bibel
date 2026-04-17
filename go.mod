@@ -8,7 +8,9 @@ require (
 	github.com/charmbracelet/lipgloss v0.8.0
 )
 
-require github.com/pelletier/go-toml/v2 v2.3.0 // indirect
+require (
+	github.com/pelletier/go-toml/v2 v2.3.0 // indirect
+)
 
 require (
 	github.com/adrg/xdg v0.5.3

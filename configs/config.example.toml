@@ -47,3 +47,6 @@ reading_mode = "evangelion"
   # Start date for yearly progression (format: "1 January")
   # Empty means 1 January of current year
   start_date = ""
+
+# Easter type: "orthodox" (default) or "latin" (i.e., roman catholic)
+easter_type = "orthodox"

@@ -8,6 +8,20 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-04-17
+
+### Added
+
+- **Easter progress bar**: Fancy progress bar at bottom of TUI showing time
+until Easter, which is configurable; Orthodox (default) or Roman Catholic.
+Shows days/hours/minutes until next Easter with percentage progress.
+- New `-l/--latin` flag to use Roman Catholic Easter instead of Eastern
+Orthodox.
+- Added vendored `eastertime` package with accurate Orthodox and Roman Catholic
+algorithms for telling Easter time.
+- **Configuration option**: `easter_type` configuration field in TOML (default:
+"orthodox")
+
 ## [0.8.0] - 2026-04-17
 
 ### Added

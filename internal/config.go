@@ -13,7 +13,7 @@ import (
 // It returns the path to the first JSON file found, or an error if none found
 func findBibleFileInDataDir() (string, error) {
 	dataDir := filepath.Join(xdg.DataHome, "bibel")
-	
+
 	// Check if the directory exists
 	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
 		return "", fmt.Errorf("Bible data directory not found: %s\nPlease create this directory and add Bible JSON files to it", dataDir)
@@ -44,6 +44,9 @@ type Config struct {
 
 	// Bible data file path (default: "books/pol_nbg.json")
 	BiblePath string `toml:"bible_path" mapstructure:"bible_path"`
+
+	// Easter type: "orthodox" (default), "latin"
+	EasterType string `toml:"easter_type" mapstructure:"easter_type"`
 
 	// TUI settings
 	TUI struct {
@@ -95,8 +98,9 @@ type Config struct {
 func DefaultConfig() *Config {
 	cfg := &Config{
 		ReadingMode: "evangelion",
-		OutputMode: "tui",
-		BiblePath:  "", // Empty means use XDG data directory
+		OutputMode:  "tui",
+		BiblePath:   "",         // Empty means use XDG data directory
+		EasterType:  "orthodox", // Default to Orthodox Easter
 	}
 
 	cfg.TUI.ShowQuitMessage = true
@@ -135,6 +139,7 @@ func LoadConfig() (*Config, error) {
 	viper.SetDefault("reading_mode", defaultCfg.ReadingMode)
 	viper.SetDefault("output_mode", defaultCfg.OutputMode)
 	viper.SetDefault("bible_path", defaultCfg.BiblePath)
+	viper.SetDefault("easter_type", defaultCfg.EasterType)
 	viper.SetDefault("tui.show_quit_message", defaultCfg.TUI.ShowQuitMessage)
 	viper.SetDefault("tui.border_style", defaultCfg.TUI.BorderStyle)
 	viper.SetDefault("tui.border_colour", defaultCfg.TUI.BorderColour)
@@ -177,6 +182,9 @@ func LoadConfig() (*Config, error) {
 	if cfg.BiblePath == "" {
 		cfg.BiblePath = defaultCfg.BiblePath
 	}
+	if cfg.EasterType == "" {
+		cfg.EasterType = defaultCfg.EasterType
+	}
 	if cfg.TUI.BorderStyle == "" {
 		cfg.TUI.BorderStyle = defaultCfg.TUI.BorderStyle
 	}
@@ -208,6 +216,7 @@ func SaveConfig(cfg *Config) error {
 	viper.Set("reading_mode", cfg.ReadingMode)
 	viper.Set("output_mode", cfg.OutputMode)
 	viper.Set("bible_path", cfg.BiblePath)
+	viper.Set("easter_type", cfg.EasterType)
 	viper.Set("tui.show_quit_message", cfg.TUI.ShowQuitMessage)
 	viper.Set("tui.border_style", cfg.TUI.BorderStyle)
 	viper.Set("tui.border_colour", cfg.TUI.BorderColour)
@@ -247,10 +256,10 @@ func GenerateDefaultConfig() error {
 func (c *Config) Validate() error {
 	// Validate reading mode
 	validReadingModes := map[string]bool{
-		"evangelion": true,
+		"evangelion":    true,
 		"new_testament": true,
 		"old_testament": true,
-		"bible": true,
+		"bible":         true,
 	}
 	// Allow empty reading mode (will use default)
 	if c.ReadingMode != "" && !validReadingModes[c.ReadingMode] {
@@ -276,6 +285,16 @@ func (c *Config) Validate() error {
 	}
 	if !validBorderStyles[c.TUI.BorderStyle] {
 		return fmt.Errorf("invalid border style: %s, must be one of: rounded, double, single, hidden", c.TUI.BorderStyle)
+	}
+
+	// Validate Easter type
+	validEasterTypes := map[string]bool{
+		"orthodox": true,
+		"latin":    true,
+	}
+	// Allow empty Easter type (will use default)
+	if c.EasterType != "" && !validEasterTypes[c.EasterType] {
+		return fmt.Errorf("invalid easter type: %s, must be one of: orthodox, latin", c.EasterType)
 	}
 
 	// Validate verses per day

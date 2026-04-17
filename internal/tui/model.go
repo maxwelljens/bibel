@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -19,6 +20,7 @@ type Model struct {
 	styles     *Styles
 	formatter  *bible.Formatter
 	config     *bible.Config
+	easterProg *bible.EasterProgression
 }
 
 // Styles contains the lipgloss styles for the TUI
@@ -32,6 +34,9 @@ type Styles struct {
 
 // NewModel creates a new TUI model with the given Bible data and bookmark
 func NewModel(bibleData *bible.Bible, bookmark *bible.Bookmark, config *bible.Config) Model {
+	// Initialise Easter progression
+	easterProg := bible.NewEasterProgression(config.EasterType)
+
 	m := Model{
 		bibleData:  bibleData,
 		bookmark:   bookmark,
@@ -39,6 +44,7 @@ func NewModel(bibleData *bible.Bible, bookmark *bible.Bookmark, config *bible.Co
 		styles:     createStyles(config),
 		formatter:  bible.NewFormatterWithFullConfig(bibleData, config.Formatter.UseColours, config.Formatter.HeaderFormat, config.Formatter.Numbered, config.Formatter.Paragraphs),
 		config:     config,
+		easterProg: easterProg,
 	}
 	return m
 }
@@ -192,7 +198,7 @@ func (m Model) View() string {
 	// Box has: Padding(1, 2) = 2 left + 2 right = 4
 	// Border = 1 left + 1 right = 2
 	// Total horizontal frame = 6
-	// Use window width with some margin
+	// Use window size with some margin
 	availableWidth := max(
 		// Leave some terminal margin
 		m.width-10,
@@ -204,8 +210,8 @@ func (m Model) View() string {
 	var verseContent string
 	if m.config.Formatter.Numbered || m.config.Formatter.Paragraphs {
 		// Use TUI-aware formatting for numbered or paragraph mode
-		verseContent = m.formatter.FormatSnippetForTUI(verses, 
-			m.styles.content, 
+		verseContent = m.formatter.FormatSnippetForTUI(verses,
+			m.styles.content,
 			m.styles.numberStyle,
 			contentWidth)
 	} else {
@@ -218,16 +224,92 @@ func (m Model) View() string {
 	// Create the box with max width constraint
 	box := m.styles.box.MaxWidth(availableWidth).Render(boxContent.String())
 
+	// Create Easter progress bar
+	easterProgress := m.renderEasterProgressBar(availableWidth)
+
 	// Add quit message below the box if configured to show it
 	var fullOutput string
 	if m.config.TUI.ShowQuitMessage {
 		quitMsg := m.styles.quitMessage.Render("Press q to quit...")
-		fullOutput = lipgloss.JoinVertical(lipgloss.Center, box, quitMsg)
+		fullOutput = lipgloss.JoinVertical(lipgloss.Center, box, easterProgress, quitMsg)
 	} else {
-		fullOutput = lipgloss.JoinVertical(lipgloss.Center, box)
+		fullOutput = lipgloss.JoinVertical(lipgloss.Center, box, easterProgress)
 	}
 
 	return fullOutput
+}
+
+// renderEasterProgressBar renders a fancy progress bar showing time until Easter
+func (m Model) renderEasterProgressBar(width int) string {
+	if m.easterProg == nil {
+		return ""
+	}
+
+	// Calculate progress percentage
+	progress, err := m.easterProg.GetEasterProgressPercentage()
+	if err != nil {
+		// If we can't calculate Easter, show error message
+		errorStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#FF4444")).
+			Italic(true)
+		return errorStyle.Width(width - 6).Render("Unable to calculate Easter date")
+	}
+
+	// Format time until Easter
+	timeStr, err := m.easterProg.FormatEasterProgress()
+	if err != nil {
+		timeStr = "Calculating..."
+	}
+
+	// Create progress bar
+	barWidth := max(
+		// Leave some padding
+		width-10,
+		// Minimum bar width
+		20)
+
+	// Calculate filled width
+	filledWidth := max(min(int(float64(barWidth)*progress), barWidth), 0)
+	emptyWidth := barWidth - filledWidth
+
+	// Define styles
+	filledStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#FFFFFF")).
+		Background(lipgloss.Color("#00AA00"))
+
+	emptyStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#888888")).
+		Background(lipgloss.Color("#222222"))
+
+	// Create bar segments
+	filledBar := filledStyle.Render(strings.Repeat("█", filledWidth))
+	emptyBar := emptyStyle.Render(strings.Repeat("░", emptyWidth))
+	bar := filledBar + emptyBar
+
+	// Add percentage text
+	percentage := fmt.Sprintf("%.1f%%", progress*100)
+	percentageStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#AAAAAA")).
+		Bold(true)
+
+	percentageText := percentageStyle.Render(percentage)
+
+	// Combine time text, bar, and percentage
+	timeStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#CCCCCC"))
+
+	timeText := timeStyle.Width(barWidth - len(percentage) - 2).Render(timeStr)
+
+	// Layout: time text on left, bar below, percentage on right of bar
+	topRow := lipgloss.JoinHorizontal(lipgloss.Left, timeText, " ", percentageText)
+	bottomRow := bar
+
+	// Container for the progress bar
+	containerStyle := lipgloss.NewStyle().
+		Padding(0, 1).
+		MarginTop(1)
+
+	return containerStyle.Render(lipgloss.JoinVertical(lipgloss.Left, topRow, bottomRow))
 }
 
 // CreateTUIProgram creates and returns a bubbletea program for the Bible verse
@@ -242,7 +324,8 @@ func stripANSI(str string) string {
 	inEscape := false
 
 	for i := 0; i < len(str); i++ {
-		if str[i] == '\033' && i+1 < len(str) && str[i+1] == '[' {
+		// Check for ESC [ sequence (ANSI escape)
+		if str[i] == 27 && i+1 < len(str) && str[i+1] == '[' {
 			inEscape = true
 			i++ // Skip the '['
 			continue
@@ -260,12 +343,4 @@ func stripANSI(str string) string {
 	}
 
 	return result.String()
-}
-
-// max returns the larger of two integers
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
