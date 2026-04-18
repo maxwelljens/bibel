@@ -12,7 +12,7 @@ boxes
 year (1 January = Matthew 1:1-12)
 - **Smart Sizing**: Default snippet size is 12 verses, extends to end of
 chapter if less than 12 verses remain
-- **Adaptive Styling**: Terminal-adaptive colours and borders using `lipgloss`
+- **ANSI Colours: Uses ANSI terminal colours set by terminal emulator
 - **Interactive Controls**: Press `q` to quit (MOTD-like behaviour)
 - **Yearly Cycle**: Progresses through all four Gospels each year, restarting
 on 1 January
@@ -94,11 +94,6 @@ Default macOS and Windows paths are also supported.
 true)
 - **border_style**: Box border style: "rounded", "double", "single", or
 "hidden" (default: "rounded")
-- **border_colour**: Box border colour (hex or named colour, empty for
-adaptive)
-- **header_colour**: Header text colour (empty for adaptive)
-- **text_colour**: Bible text colour (empty for adaptive)
-- **quit_colour**: Quit message colour (empty for adaptive)
 
 #### Formatter Settings (`[formatter]` section)
 - **use_colours**: Whether to use ANSI colours in formatted output (default:
@@ -193,7 +188,7 @@ The TUI features a progress bar showing time until the next Easter:
 ### Progress Bar Features
 - **Visual Progress**: Filled segments (█) showing annual cycle percentage between consecutive Easters
 - **Time Display**: Shows exact days, hours, and minutes until next Easter
-- **Styling**: Uses `lipgloss` with green-filled segments and adaptive terminal colours
+- **Styling: Uses `lipgloss` with ANSI-coloured segments
 - **Configuration**: Easter type configurable via `easter_type` field in TOML configuration
 
 ### Easter Calculations

@@ -18,13 +18,6 @@ reading_mode = "evangelion"
   
   # Box border style: "rounded", "double", "single", or "hidden"
   border_style = "rounded"
-  
-  # Colours for TUI elements (empty = adaptive to terminal)
-  # Use hex colours like "#FF0000" or named colours like "red"
-  border_colour = ""    # Box border colour
-  header_colour = ""    # Header text colour  
-  text_colour = ""      # Bible text colour
-  quit_colour = ""      # Quit message colour
 
 [formatter]
   # Whether to use ANSI colours in formatted output mode

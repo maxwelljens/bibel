@@ -8,6 +8,21 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-04-18
+
+### Changed
+
+- **ANSI colour**: Changed from hex colour codes to ANSI terminal colours
+- Removed light/dark mode detection and adaptive colour logic
+- Changed "Adaptive Styling" to "ANSI Colours" in `README`
+
+### Removed
+
+- Removed `border_colour`, `header_colour`, `text_colour`, `quit_colour` from
+TOML configuration
+- `HasDarkBackground()` check and `lightDark()` helper function
+- All `#RRGGBB` colour codes (replaced with ANSI codes)
+
 ## [0.9.0] - 2026-04-17
 
 ### Added

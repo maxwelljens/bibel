@@ -55,18 +55,6 @@ type Config struct {
 
 		// Box border style: "rounded", "double", "single", "hidden"
 		BorderStyle string `toml:"border_style" mapstructure:"border_style"`
-
-		// Box border colour (default: adaptive to terminal)
-		BorderColour string `toml:"border_colour" mapstructure:"border_colour"`
-
-		// Header colour (default: adaptive to terminal)
-		HeaderColour string `toml:"header_colour" mapstructure:"header_colour"`
-
-		// Text colour (default: adaptive to terminal)
-		TextColour string `toml:"text_colour" mapstructure:"text_colour"`
-
-		// Quit message colour (default: adaptive to terminal)
-		QuitColour string `toml:"quit_colour" mapstructure:"quit_colour"`
 	} `toml:"tui" mapstructure:"tui"`
 
 	// Formatter settings
@@ -105,10 +93,6 @@ func DefaultConfig() *Config {
 
 	cfg.TUI.ShowQuitMessage = true
 	cfg.TUI.BorderStyle = "rounded"
-	cfg.TUI.BorderColour = "" // Empty means adaptive
-	cfg.TUI.HeaderColour = "" // Empty means adaptive
-	cfg.TUI.TextColour = ""   // Empty means adaptive
-	cfg.TUI.QuitColour = ""   // Empty means adaptive
 
 	cfg.Formatter.UseColours = true
 	cfg.Formatter.HeaderFormat = "{book} {chapter}\nw. {first_verse}-{second_verse}"
@@ -142,10 +126,6 @@ func LoadConfig() (*Config, error) {
 	viper.SetDefault("easter_type", defaultCfg.EasterType)
 	viper.SetDefault("tui.show_quit_message", defaultCfg.TUI.ShowQuitMessage)
 	viper.SetDefault("tui.border_style", defaultCfg.TUI.BorderStyle)
-	viper.SetDefault("tui.border_colour", defaultCfg.TUI.BorderColour)
-	viper.SetDefault("tui.header_colour", defaultCfg.TUI.HeaderColour)
-	viper.SetDefault("tui.text_colour", defaultCfg.TUI.TextColour)
-	viper.SetDefault("tui.quit_colour", defaultCfg.TUI.QuitColour)
 	viper.SetDefault("formatter.use_colours", defaultCfg.Formatter.UseColours)
 	viper.SetDefault("formatter.header_format", defaultCfg.Formatter.HeaderFormat)
 	viper.SetDefault("formatter.numbered", defaultCfg.Formatter.Numbered)
@@ -219,10 +199,6 @@ func SaveConfig(cfg *Config) error {
 	viper.Set("easter_type", cfg.EasterType)
 	viper.Set("tui.show_quit_message", cfg.TUI.ShowQuitMessage)
 	viper.Set("tui.border_style", cfg.TUI.BorderStyle)
-	viper.Set("tui.border_colour", cfg.TUI.BorderColour)
-	viper.Set("tui.header_colour", cfg.TUI.HeaderColour)
-	viper.Set("tui.text_colour", cfg.TUI.TextColour)
-	viper.Set("tui.quit_colour", cfg.TUI.QuitColour)
 	viper.Set("formatter.use_colours", cfg.Formatter.UseColours)
 	viper.Set("formatter.header_format", cfg.Formatter.HeaderFormat)
 	viper.Set("formatter.numbered", cfg.Formatter.Numbered)

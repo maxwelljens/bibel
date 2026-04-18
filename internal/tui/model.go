@@ -51,47 +51,18 @@ func NewModel(bibleData *bible.Bible, bookmark *bible.Bookmark, config *bible.Co
 
 // createStyles creates the lipgloss styles based on configuration
 func createStyles(config *bible.Config) *Styles {
-	// Detect if terminal has dark background
-	hasDarkBG := lipgloss.HasDarkBackground()
-
-	// Helper function for light/dark colors
-	lightDark := func(light, dark lipgloss.TerminalColor) lipgloss.TerminalColor {
-		if hasDarkBG {
-			return dark
-		}
-		return light
-	}
-
-	// Get colours from config, or use adaptive defaults
-	var borderColour, headerColour, textColour, quitColour lipgloss.TerminalColor
-
-	// Border colour
-	if config.TUI.BorderColour != "" {
-		borderColour = lipgloss.Color(config.TUI.BorderColour)
-	} else {
-		borderColour = lightDark(lipgloss.Color("#666666"), lipgloss.Color("#999999"))
-	}
-
-	// Header colour (matching formatter's green)
-	if config.TUI.HeaderColour != "" {
-		headerColour = lipgloss.Color(config.TUI.HeaderColour)
-	} else {
-		headerColour = lightDark(lipgloss.Color("#00AA00"), lipgloss.Color("#00FF00"))
-	}
-
-	// Text colour
-	if config.TUI.TextColour != "" {
-		textColour = lipgloss.Color(config.TUI.TextColour)
-	} else {
-		textColour = lightDark(lipgloss.Color("#000000"), lipgloss.Color("#FFFFFF"))
-	}
-
-	// Quit message colour
-	if config.TUI.QuitColour != "" {
-		quitColour = lipgloss.Color(config.TUI.QuitColour)
-	} else {
-		quitColour = lightDark(lipgloss.Color("#555555"), lipgloss.Color("#AAAAAA"))
-	}
+	// Use ANSI colours (set by terminal emulator)
+	// Border colour - bright black (gray)
+	borderColour := lipgloss.Color("8") // ANSI bright black (gray)
+	
+	// Header colour - green (matching formatter's green)
+	headerColour := lipgloss.Color("2") // ANSI green
+	
+	// Text colour - default terminal text colour
+	textColour := lipgloss.Color("") // Default terminal colour
+	
+	// Quit message colour - bright black (gray)
+	quitColour := lipgloss.Color("8") // ANSI bright black (gray)
 
 	// Create border style based on config
 	var border lipgloss.Border
@@ -124,7 +95,7 @@ func createStyles(config *bible.Config) *Styles {
 			Foreground(textColour),
 
 		numberStyle: lipgloss.NewStyle().
-			Foreground(lightDark(lipgloss.Color("#444444"), lipgloss.Color("#AAAAAA"))).
+			Foreground(lipgloss.Color("8")). // ANSI bright black (gray)
 			Bold(false),
 
 		quitMessage: lipgloss.NewStyle().
@@ -250,7 +221,7 @@ func (m Model) renderEasterProgressBar(width int) string {
 	if err != nil {
 		// If we can't calculate Easter, show error message
 		errorStyle := lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FF4444")).
+			Foreground(lipgloss.Color("1")). // ANSI red
 			Italic(true)
 		return errorStyle.Width(width - 6).Render("Unable to calculate Easter date")
 	}
@@ -272,14 +243,14 @@ func (m Model) renderEasterProgressBar(width int) string {
 	filledWidth := max(min(int(float64(barWidth)*progress), barWidth), 0)
 	emptyWidth := barWidth - filledWidth
 
-	// Define styles
+	// Define styles using ANSI colours
 	filledStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FFFFFF")).
-		Background(lipgloss.Color("#00AA00"))
+		Foreground(lipgloss.Color("15")). // Bright white
+		Background(lipgloss.Color("2"))   // Green
 
 	emptyStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#888888")).
-		Background(lipgloss.Color("#222222"))
+		Foreground(lipgloss.Color("8")).  // Bright black (gray)
+		Background(lipgloss.Color("0"))   // Black
 
 	// Create bar segments
 	filledBar := filledStyle.Render(strings.Repeat("█", filledWidth))
@@ -289,14 +260,14 @@ func (m Model) renderEasterProgressBar(width int) string {
 	// Add percentage text
 	percentage := fmt.Sprintf("%.1f%%", progress*100)
 	percentageStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#AAAAAA")).
+		Foreground(lipgloss.Color("8")). // ANSI bright black (gray)
 		Bold(true)
 
 	percentageText := percentageStyle.Render(percentage)
 
 	// Combine time text, bar, and percentage
 	timeStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#CCCCCC"))
+		Foreground(lipgloss.Color("7")) // ANSI white (light gray)
 
 	timeText := timeStyle.Width(barWidth - len(percentage) - 2).Render(timeStr)
 
