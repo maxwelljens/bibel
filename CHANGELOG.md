@@ -8,6 +8,17 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-04-18
+
+### Added
+
+- **New flag**: `-v/--verbose` flag to print with more information if needed.
+
+### Fixed
+
+- Add missing newlines at end of `easterprogression.go` and `config.go`
+  (cosmetic)
+
 ## [0.10.0] - 2026-04-18
 
 ### Changed

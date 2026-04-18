@@ -47,7 +47,7 @@ func main() {
 	}
 
 	// Load configuration
-	config, err := bible.LoadConfig()
+	config, err := bible.LoadConfig(args.Verbose)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 		os.Exit(1)
@@ -64,7 +64,7 @@ func main() {
 	}
 
 	// Load Bible data
-	bibleData, err := bible.LoadBible(config.BiblePath)
+	bibleData, err := bible.LoadBible(config.BiblePath, args.Verbose)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading Bible data: %v\n", err)
 		os.Exit(1)

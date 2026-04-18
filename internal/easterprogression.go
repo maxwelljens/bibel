@@ -157,3 +157,4 @@ func (ep *EasterProgression) GetEasterProgressPercentage() (float64, error) {
 		return elapsedDuration.Seconds() / totalDuration.Seconds(), nil
 	}
 }
+

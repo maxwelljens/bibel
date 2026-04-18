@@ -3,6 +3,7 @@ package bible
 import (
 	"encoding/json"
 	"os"
+	"strings"
 )
 
 // Bible represents the complete Bible data
@@ -18,9 +19,14 @@ type Bible struct {
 }
 
 // LoadBible loads Bible data from a JSON file
-func LoadBible(filePath string) (*Bible, error) {
+func LoadBible(filePath string, verbose bool) (*Bible, error) {
+	logger := NewVerboseLogger(verbose)
+	logger.Info("Loading Bible data from file")
+	logger.Path(filePath)
+
 	data, err := os.ReadFile(filePath)
 	if err != nil {
+		logger.Warning("Failed to read Bible file: %v", err)
 		return nil, err
 	}
 
@@ -30,6 +36,13 @@ func LoadBible(filePath string) (*Bible, error) {
 	}
 
 	bible.buildIndex()
+	logger.Success("Bible data loaded successfully")
+	logger.WithFields(map[string]any{
+		"metadata.name": bible.Metadata.Name,
+		"metadata.lang": bible.Metadata.Lang,
+		"verse_count":   len(bible.Verses),
+	}, "Bible metadata")
+
 	return &bible, nil
 }
 
@@ -68,18 +81,18 @@ func (b *Bible) GetVerse(book, chapter, verse int) (*Verse, bool) {
 func (b *Bible) GetChapterText(book, chapter int) string {
 	if chapterMap, ok := b.byBookChapterVerse[book]; ok {
 		if verseMap, ok := chapterMap[chapter]; ok {
-			var text string
+			var text strings.Builder
 			// We need to get verses in order
 			// Since we don't know the max verse number, we'll iterate
 			// This could be optimized but works for now
 			for i := 1; ; i++ {
 				if verse, ok := verseMap[i]; ok {
-					text += verse.Text + " "
+					text.WriteString(verse.Text + " ")
 				} else {
 					break
 				}
 			}
-			return text
+			return text.String()
 		}
 	}
 	return ""
@@ -111,3 +124,4 @@ func (b *Bible) GetVerseRange(book, chapter, firstVerse, lastVerse int) []*Verse
 
 	return verses
 }
+

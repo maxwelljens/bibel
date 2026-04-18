@@ -106,7 +106,9 @@ func DefaultConfig() *Config {
 }
 
 // LoadConfig loads configuration from file and environment
-func LoadConfig() (*Config, error) {
+func LoadConfig(verbose bool) (*Config, error) {
+	logger := NewVerboseLogger(verbose)
+	logger.Section("Loading Configuration")
 	// Set up viper
 	viper.SetConfigName("config") // Name of config file (without extension)
 	viper.SetConfigType("toml")   // REQUIRED if the config file does not have the extension in the name
@@ -137,8 +139,8 @@ func LoadConfig() (*Config, error) {
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			// Config file not found; we'll use defaults
-			fmt.Fprintf(os.Stderr, "Note: No configuration file found at %s/config.toml\n", configPath)
-			fmt.Fprintf(os.Stderr, "Using default configuration. Run 'bibel --generate-config' to create a default config file.\n")
+			logger.Info("No configuration file found at %s/config.toml", configPath)
+			logger.Info("Using default configuration. Run 'bibel --generate-config' to create a default config file.")
 		} else {
 			// Config file was found but another error was produced
 			return nil, fmt.Errorf("error reading config file: %w", err)
@@ -176,16 +178,21 @@ func LoadConfig() (*Config, error) {
 	if cfg.BiblePath == "" {
 		biblePath, err := findBibleFileInDataDir()
 		if err != nil {
-			return nil, fmt.Errorf("failed to find Bible data file: %w", err)
+			logger.Warning("Failed to find Bible data file: %v", err)
+		return nil, fmt.Errorf("failed to find Bible data file: %w", err)
 		}
 		cfg.BiblePath = biblePath
-		fmt.Fprintf(os.Stderr, "Using Bible file from XDG data directory: %s\n", cfg.BiblePath)
+		logger.Info("Using Bible file from XDG data directory")
+		logger.Path(cfg.BiblePath)
 	}
 
 	// Validate configuration
+	logger.Section("Validating Configuration")
 	if err := cfg.Validate(); err != nil {
+		logger.Warning("Configuration validation failed: %v", err)
 		return nil, fmt.Errorf("invalid configuration: %w", err)
 	}
+	logger.Success("Configuration validated successfully")
 
 	return &cfg, nil
 }
