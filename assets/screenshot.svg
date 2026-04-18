@@ -1,0 +1,131 @@
+<svg height="567.2" width="803.2" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(32,16)">
+<filter filterUnits="userSpaceOnUse" height="575.2" id="shadow" width="811.2" x="-32" y="-24">
+<feGaussianBlur stdDeviation="12"/>
+</filter>
+<rect fill="#000000c0" filter="url(#shadow)" height="503.2" rx="10" ry="10" width="739.2" x="4" y="12"/>
+<rect fill="#282c34" height="503.2" rx="10" ry="10" width="739.2"/>
+<clipPath id="header">
+<rect height="28" width="739.2"/>
+</clipPath>
+<rect clip-path="url(#header)" fill="#383837" height="56" rx="10" ry="10" width="739.2"/>
+<line stroke="#000000c0" stroke-width="0.5" x1="0" x2="739.2" y1="28" y2="28"/><text dominant-baseline="central" fill="#b3b3b3" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" x="369.6" y="14">bibel</text>
+<g>
+<circle cx="14" cy="14" fill="#ff5f56" r="6" stroke="#ff5f56" stroke-width="0.5"/>
+<circle cx="34" cy="14" fill="#ffbd2e" r="6" stroke="#ffbd2e" stroke-width="0.5"/>
+<circle cx="54" cy="14" fill="#28c941" r="6" stroke="#28c941" stroke-width="0.5"/>
+</g>
+<svg class="terminal" font-family="JetBrains Mono, Fira Code, Source Code Pro, Cascadia Code, Consolas, Menlo, Monaco, DejaVu Sans Mono, monospace, Symbols Nerd Font Mono, Cascadia Mono" font-size="12" height="475.2" width="739.2" y="28">
+<svg fill="#dcdfe4" x="9.6" y="7.2">
+<g>
+<svg height="460.8" viewBox="0 0 60 38.4" width="720">
+<g stroke-width="0.025">
+<path d="M3,34.8 H3.6 V36 H3 Z" fill="#98c379" stroke="#98c379"/>
+<path d="M3.6,34.8 H51 V36 H3.6 Z" fill="#3e4451" stroke="#3e4451"/>
+</g>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="14.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">╭────────────────────────────────────────────────────────────────────────────────────────╮</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="28.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>                                                                                        </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="43.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#98c379" font-weight="bold">Marka </tspan><tspan fill="#98c379" font-weight="bold">6</tspan><tspan>                                                                               </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="57.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#98c379" font-weight="bold">w. </tspan><tspan fill="#98c379" font-weight="bold">22-33</tspan><tspan>                                                                              </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="72">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>                                                                                        </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="86.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>                                                                                        </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="100.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">gdy </tspan><tspan fill="#dcdfe4">weszła </tspan><tspan fill="#dcdfe4">córka </tspan><tspan fill="#dcdfe4">Herodiady, </tspan><tspan fill="#dcdfe4">oraz </tspan><tspan fill="#dcdfe4">gdy </tspan><tspan fill="#dcdfe4">zatańczyła </tspan><tspan fill="#dcdfe4">a </tspan><tspan fill="#dcdfe4">spodobała </tspan><tspan fill="#dcdfe4">się </tspan><tspan fill="#dcdfe4">Herodowi </tspan><tspan fill="#dcdfe4">i </tspan><tspan>         </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="115.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">współleżącym </tspan><tspan fill="#dcdfe4">król </tspan><tspan fill="#dcdfe4">powiedział </tspan><tspan fill="#dcdfe4">dzieweczce: </tspan><tspan fill="#dcdfe4">Poproś </tspan><tspan fill="#dcdfe4">mnie, </tspan><tspan fill="#dcdfe4">jeśli </tspan><tspan fill="#dcdfe4">coś </tspan><tspan fill="#dcdfe4">chcesz, </tspan><tspan fill="#dcdfe4">a </tspan><tspan fill="#dcdfe4">ci </tspan><tspan fill="#dcdfe4">dam. </tspan><tspan>    </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="129.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">Także </tspan><tspan fill="#dcdfe4">jej </tspan><tspan fill="#dcdfe4">przysiągł: </tspan><tspan fill="#dcdfe4">O </tspan><tspan fill="#dcdfe4">cokolwiek </tspan><tspan fill="#dcdfe4">byś </tspan><tspan fill="#dcdfe4">mnie </tspan><tspan fill="#dcdfe4">prosiła </tspan><tspan fill="#dcdfe4">dam </tspan><tspan fill="#dcdfe4">ci, </tspan><tspan fill="#dcdfe4">aż </tspan><tspan fill="#dcdfe4">do </tspan><tspan fill="#dcdfe4">połowy </tspan><tspan fill="#dcdfe4">mojego </tspan><tspan>        </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="144">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">królestwa. </tspan><tspan fill="#dcdfe4">Zaś </tspan><tspan fill="#dcdfe4">ona </tspan><tspan fill="#dcdfe4">wyszła </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">powiedziała </tspan><tspan fill="#dcdfe4">swojej </tspan><tspan fill="#dcdfe4">matce: </tspan><tspan fill="#dcdfe4">O </tspan><tspan fill="#dcdfe4">co </tspan><tspan fill="#dcdfe4">mam </tspan><tspan fill="#dcdfe4">prosić? </tspan><tspan fill="#dcdfe4">A </tspan><tspan fill="#dcdfe4">ona </tspan><tspan fill="#dcdfe4">rzekła: </tspan><tspan> </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="158.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">O </tspan><tspan fill="#dcdfe4">głowę </tspan><tspan fill="#dcdfe4">Jana </tspan><tspan fill="#dcdfe4">Chrzciciela. </tspan><tspan fill="#dcdfe4">Więc </tspan><tspan fill="#dcdfe4">przyszła </tspan><tspan fill="#dcdfe4">do </tspan><tspan fill="#dcdfe4">króla </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">poprosiła </tspan><tspan fill="#dcdfe4">mówiąc: </tspan><tspan fill="#dcdfe4">Chcę, </tspan><tspan fill="#dcdfe4">abyś </tspan><tspan fill="#dcdfe4">mi </tspan><tspan>   </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="172.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">natychmiast </tspan><tspan fill="#dcdfe4">dał </tspan><tspan fill="#dcdfe4">na </tspan><tspan fill="#dcdfe4">półmisku </tspan><tspan fill="#dcdfe4">głowę </tspan><tspan fill="#dcdfe4">Jana </tspan><tspan fill="#dcdfe4">Chrzciciela. </tspan><tspan fill="#dcdfe4">Zatem </tspan><tspan fill="#dcdfe4">król </tspan><tspan fill="#dcdfe4">stał </tspan><tspan fill="#dcdfe4">się </tspan><tspan fill="#dcdfe4">zasmuconym, </tspan><tspan>  </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="187.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">lecz </tspan><tspan fill="#dcdfe4">z </tspan><tspan fill="#dcdfe4">powodu </tspan><tspan fill="#dcdfe4">przysiąg </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">współleżących, </tspan><tspan fill="#dcdfe4">nie </tspan><tspan fill="#dcdfe4">zechciał </tspan><tspan fill="#dcdfe4">jej </tspan><tspan fill="#dcdfe4">odmówić. </tspan><tspan fill="#dcdfe4">I </tspan><tspan fill="#dcdfe4">zaraz </tspan><tspan fill="#dcdfe4">posłał </tspan><tspan>     </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="201.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">kata </tspan><tspan fill="#dcdfe4">oraz </tspan><tspan fill="#dcdfe4">nakazał </tspan><tspan fill="#dcdfe4">przynieść </tspan><tspan fill="#dcdfe4">tą </tspan><tspan fill="#dcdfe4">głowę. </tspan><tspan fill="#dcdfe4">Zaś </tspan><tspan fill="#dcdfe4">on </tspan><tspan fill="#dcdfe4">poszedł, </tspan><tspan fill="#dcdfe4">ściął </tspan><tspan fill="#dcdfe4">go </tspan><tspan fill="#dcdfe4">w </tspan><tspan fill="#dcdfe4">więzieniu, </tspan><tspan>          </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="216">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">przyniósł </tspan><tspan fill="#dcdfe4">na </tspan><tspan fill="#dcdfe4">półmisku </tspan><tspan fill="#dcdfe4">jego </tspan><tspan fill="#dcdfe4">głowę </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">dał </tspan><tspan fill="#dcdfe4">ją </tspan><tspan fill="#dcdfe4">dzieweczce, </tspan><tspan fill="#dcdfe4">a </tspan><tspan fill="#dcdfe4">dzieweczka </tspan><tspan fill="#dcdfe4">dała </tspan><tspan fill="#dcdfe4">ją </tspan><tspan fill="#dcdfe4">swojej </tspan><tspan>    </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="230.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">matce. </tspan><tspan fill="#dcdfe4">Więc </tspan><tspan fill="#dcdfe4">kiedy </tspan><tspan fill="#dcdfe4">to </tspan><tspan fill="#dcdfe4">usłyszeli </tspan><tspan fill="#dcdfe4">jego </tspan><tspan fill="#dcdfe4">uczniowie, </tspan><tspan fill="#dcdfe4">przyszli, </tspan><tspan fill="#dcdfe4">wzięli </tspan><tspan fill="#dcdfe4">jego </tspan><tspan fill="#dcdfe4">zwłoki </tspan><tspan fill="#dcdfe4">oraz </tspan><tspan>     </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="244.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">złożyli </tspan><tspan fill="#dcdfe4">je </tspan><tspan fill="#dcdfe4">w </tspan><tspan fill="#dcdfe4">grobie. </tspan><tspan fill="#dcdfe4">A </tspan><tspan fill="#dcdfe4">apostołowie </tspan><tspan fill="#dcdfe4">zeszli </tspan><tspan fill="#dcdfe4">się </tspan><tspan fill="#dcdfe4">przy </tspan><tspan fill="#dcdfe4">Jezusie </tspan><tspan fill="#dcdfe4">oraz </tspan><tspan fill="#dcdfe4">wszystko </tspan><tspan fill="#dcdfe4">mu </tspan><tspan>          </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="259.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">oznajmili; </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">jak </tspan><tspan fill="#dcdfe4">uczynili, </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">jak </tspan><tspan fill="#dcdfe4">nauczali. </tspan><tspan fill="#dcdfe4">Zatem </tspan><tspan fill="#dcdfe4">im </tspan><tspan fill="#dcdfe4">powiedział: </tspan><tspan fill="#dcdfe4">Idźcie </tspan><tspan fill="#dcdfe4">wy </tspan><tspan fill="#dcdfe4">sami, </tspan><tspan>      </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="273.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">osobno, </tspan><tspan fill="#dcdfe4">na </tspan><tspan fill="#dcdfe4">puste </tspan><tspan fill="#dcdfe4">miejsce </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">trochę </tspan><tspan fill="#dcdfe4">odpocznijcie. </tspan><tspan fill="#dcdfe4">Bo </tspan><tspan fill="#dcdfe4">byli </tspan><tspan fill="#dcdfe4">liczni </tspan><tspan fill="#dcdfe4">co </tspan><tspan fill="#dcdfe4">przychodzili </tspan><tspan fill="#dcdfe4">i </tspan><tspan>     </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="288">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">odchodzili, </tspan><tspan fill="#dcdfe4">więc </tspan><tspan fill="#dcdfe4">nie </tspan><tspan fill="#dcdfe4">mieli </tspan><tspan fill="#dcdfe4">nawet </tspan><tspan fill="#dcdfe4">sposobności </tspan><tspan fill="#dcdfe4">by </tspan><tspan fill="#dcdfe4">zjeść. </tspan><tspan fill="#dcdfe4">Zatem </tspan><tspan fill="#dcdfe4">w </tspan><tspan fill="#dcdfe4">łodzi </tspan><tspan fill="#dcdfe4">odpłynęli </tspan><tspan fill="#dcdfe4">do </tspan><tspan>    </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="302.4">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">samotni, </tspan><tspan fill="#dcdfe4">na </tspan><tspan fill="#dcdfe4">puste </tspan><tspan fill="#dcdfe4">miejsce. </tspan><tspan fill="#dcdfe4">A </tspan><tspan fill="#dcdfe4">tłum </tspan><tspan fill="#dcdfe4">zobaczył </tspan><tspan fill="#dcdfe4">ich </tspan><tspan fill="#dcdfe4">odchodzących </tspan><tspan fill="#dcdfe4">i </tspan><tspan fill="#dcdfe4">wielu </tspan><tspan fill="#dcdfe4">go </tspan><tspan fill="#dcdfe4">poznało, </tspan><tspan fill="#dcdfe4">więc </tspan><tspan> </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="316.8">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">zbiegli </tspan><tspan fill="#dcdfe4">się </tspan><tspan fill="#dcdfe4">tam </tspan><tspan fill="#dcdfe4">pieszo </tspan><tspan fill="#dcdfe4">ze </tspan><tspan fill="#dcdfe4">wszystkich </tspan><tspan fill="#dcdfe4">miast, </tspan><tspan fill="#dcdfe4">wyprzedzili </tspan><tspan fill="#dcdfe4">ich, </tspan><tspan fill="#dcdfe4">oraz </tspan><tspan fill="#dcdfe4">się </tspan><tspan fill="#dcdfe4">przy </tspan><tspan fill="#dcdfe4">nim </tspan><tspan>       </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="331.2">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>  </tspan><tspan fill="#dcdfe4">zgromadzili. </tspan><tspan>                                                                         </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="345.6">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">│</tspan><tspan>                                                                                        </tspan><tspan fill="#545d6d">│</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="360">
+<text xml:space="preserve" y="0.96em"><tspan fill="#545d6d">╰────────────────────────────────────────────────────────────────────────────────────────╯</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="403.2">
+<text xml:space="preserve" y="0.96em"><tspan>     </tspan><tspan fill="#dcdfe4">Easter </tspan><tspan fill="#dcdfe4">in </tspan><tspan fill="#dcdfe4">378 </tspan><tspan fill="#dcdfe4">days, </tspan><tspan fill="#dcdfe4">6 </tspan><tspan fill="#dcdfe4">hours, </tspan><tspan fill="#dcdfe4">2 </tspan><tspan fill="#dcdfe4">minutes</tspan><tspan>                                     </tspan><tspan fill="#545d6d" font-weight="bold">1.8%</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="417.6">
+<text xml:space="preserve" y="0.96em"><tspan>     </tspan><tspan fill="#f7f9fc">█</tspan><tspan fill="#545d6d">░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░</tspan></text>
+</svg>
+<svg height="14.4" overflow="hidden" width="720" y="446.4">
+<text xml:space="preserve" y="0.96em"><tspan>                                    </tspan><tspan fill="#545d6d" font-style="italic">Press </tspan><tspan fill="#545d6d" font-style="italic">q </tspan><tspan fill="#545d6d" font-style="italic">to </tspan><tspan fill="#545d6d" font-style="italic">quit...</tspan></text>
+</svg>
+</g>
+</svg>
+</svg>
+<rect fill="none" height="503.2" rx="10" ry="10" stroke="#000000" stroke-width="0.5" width="739.2"/>
+<rect fill="none" height="501.2" rx="9" ry="9" stroke="#f0f0f080" stroke-width="0.5" width="737.2" x="1" y="1"/>
+</g>
+<style>
+@font-face {
+	font-family: JetBrains Mono;
+	font-weight: 100 800;
+	font-style: italic;
+	src: url(https://raw.githubusercontent.com/pamburus/fonts/refs/heads/main/JetBrainsMono/fonts/variable/JetBrainsMono-Italic%5Bwght%5D.woff2) format('woff2');
+}
+@font-face {
+	font-family: JetBrains Mono;
+	font-weight: 100 800;
+	font-style: normal;
+	src: url(https://raw.githubusercontent.com/pamburus/fonts/refs/heads/main/JetBrainsMono/fonts/variable/JetBrainsMono%5Bwght%5D.woff2) format('woff2');
+}
+</style>
+</svg>

@@ -106,19 +106,27 @@ func DefaultConfig() *Config {
 }
 
 // LoadConfig loads configuration from file and environment
-func LoadConfig(verbose bool) (*Config, error) {
+// If configPath is empty, uses default XDG config location
+// LoadConfig loads configuration from file and environment
+// If configPath is empty, uses default XDG config location
+func LoadConfig(configPath string, verbose bool) (*Config, error) {
 	logger := NewVerboseLogger(verbose)
 	logger.Section("Loading Configuration")
 	// Set up viper
 	viper.SetConfigName("config") // Name of config file (without extension)
 	viper.SetConfigType("toml")   // REQUIRED if the config file does not have the extension in the name
 
-	// Add XDG config paths
-	configPath := filepath.Join(xdg.ConfigHome, "bibel")
-	viper.AddConfigPath(configPath)
-
-	// Also check current directory for local config
-	viper.AddConfigPath(".")
+	// If a specific config file path was provided, use it
+	if configPath != "" {
+		// Use the provided config file directly
+		viper.SetConfigFile(configPath)
+	} else {
+		// Use default XDG config path
+		xdgConfigPath := filepath.Join(xdg.ConfigHome, "bibel")
+		viper.AddConfigPath(xdgConfigPath)
+		// Also check current directory for local config
+		viper.AddConfigPath(".")
+	}
 
 	// Set defaults
 	defaultCfg := DefaultConfig()
@@ -139,7 +147,12 @@ func LoadConfig(verbose bool) (*Config, error) {
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			// Config file not found; we'll use defaults
-			logger.Info("No configuration file found at %s/config.toml", configPath)
+			if configPath != "" {
+				logger.Info("No configuration file found at %s", configPath)
+			} else {
+				xdgConfigPath := filepath.Join(xdg.ConfigHome, "bibel")
+				logger.Info("No configuration file found at %s/config.toml", xdgConfigPath)
+			}
 			logger.Info("Using default configuration. Run 'bibel --generate-config' to create a default config file.")
 		} else {
 			// Config file was found but another error was produced
@@ -198,6 +211,7 @@ func LoadConfig(verbose bool) (*Config, error) {
 }
 
 // SaveConfig saves the configuration to file
+// SaveConfig saves the configuration to file
 func SaveConfig(cfg *Config) error {
 	// Set up viper with current config
 	viper.Set("reading_mode", cfg.ReadingMode)
@@ -214,13 +228,13 @@ func SaveConfig(cfg *Config) error {
 	viper.Set("date_progression.start_date", cfg.DateProgression.StartDate)
 
 	// Ensure config directory exists
-	configPath := filepath.Join(xdg.ConfigHome, "bibel")
-	if err := os.MkdirAll(configPath, 0755); err != nil {
+	xdgConfigPath := filepath.Join(xdg.ConfigHome, "bibel")
+	if err := os.MkdirAll(xdgConfigPath, 0755); err != nil {
 		return fmt.Errorf("error creating config directory: %w", err)
 	}
 
 	// Write config file
-	configFile := filepath.Join(configPath, "config.toml")
+	configFile := filepath.Join(xdgConfigPath, "config.toml")
 	if err := viper.WriteConfigAs(configFile); err != nil {
 		return fmt.Errorf("error writing config file: %w", err)
 	}

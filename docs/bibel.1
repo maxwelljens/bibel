@@ -1,0 +1,299 @@
+.\" bibel(1) - Bible verse CLI/TUI utility
+.\" 
+.\" bibel - Display daily Bible readings with date-based progression
+.\" 
+.\" European Union Public Licence 1.2
+.\" 
+.TH BIBEL 1 "April 2026" "bibel 1.0" "User Commands"
+.SH NAME
+bibel \- display today's Bible reading based on date progression
+.SH SYNOPSIS
+.B bibel
+.RI [ options ]
+.SH DESCRIPTION
+.B bibel
+is a command line interface (CLI) and terminal user interface (TUI) utility for
+displaying Bible verses. Its primary purpose is as a MOTD-like program to be shown
+on system boot, displaying today's Bible reading based on the current date.
+.PP
+The program reads 12 verses per day from the four Gospels (Matthew, Mark, Luke,
+John), with a yearly progression that restarts on 1 January. It supports
+multiple output modes including an interactive TUI with progress bars,
+formatted ANSI-coloured text, and plain text output.
+.PP
+The program calculates Easter dates using either Eastern Orthodox (Meeus Julian
+algorithm) or Roman Catholic (Delambre and Butcher's algorithm) methods.
+.SH OPTIONS
+.TP
+.BI \-r " reading" , " \-\-reading=" reading
+Reading mode. Must be one of:
+.RS
+.IP \fIevangelion\fR 15
+Four Gospels (Matthew, Mark, Luke, John). Books 40-43. This is the default.
+.IP \fInew_testament\fR
+Entire New Testament. Books 40-66 (Matthew through Revelation).
+.IP \fIold_testament\fR
+Entire Old Testament. Books 1-39 (Genesis through Malachi).
+.IP \fIbible\fR
+Entire Bible. Books 1-66.
+.RE
+.TP
+.BR \-p , " \-\-plain"
+Output plain text without formatting or TUI. Prints header followed by verse text.
+.TP
+.BR \-f , " \-\-formatted"
+Output formatted text with ANSI colours. Uses colours set by terminal emulator.
+.TP
+.BI \-c " path" , " \-\-config=" path
+Path to configuration file. Defaults to
+.IR $XDG_CONFIG_HOME/bibel/config.toml
+(~/.config/bibel/config.toml).
+.TP
+.BR \-n , " \-\-numbered"
+Print each verse on a numbered line corresponding to the verse number.
+.TP
+.BR \-g , " \-\-paragraphs"
+Render pilcrows (¶) found in source JSON Bible file as paragraph breaks with
+blank lines instead of ignoring them.
+.TP
+.BR \-l , " \-\-latin"
+Use Roman Catholic Easter calculation instead of Eastern Orthodox for the TUI
+progress bar.
+.TP
+.B \-\-generate\-config
+Generate a default configuration file and exit. File is created at the default
+configuration path.
+.TP
+.BR \-v , " \-\-verbose"
+Print additional runtime information to STDOUT, including configuration paths,
+Bible file loading status, and position calculations.
+.TP
+.BR \-h , " \-\-help"
+Display help message and exit.
+.SH CONFIGURATION
+.B bibel
+reads configuration from a TOML file located at
+.IR $XDG_CONFIG_HOME/bibel/config.toml .
+Command line arguments override configuration file settings.
+.PP
+The configuration file has the following structure:
+.PP
+.nf
+.RS
+# Output mode: "tui" (interactive terminal UI), "formatted" (ANSI-coloured text),
+# or "plain" (plain text without formatting)
+output_mode = "tui"
+
+# Path to Bible data file (relative to executable or absolute path). If empty,
+# automatically uses first JSON file found in $XDG_DATA_HOME/bibel
+bible_path = ""
+
+# Reading mode: "evangelion" (four Gospels), "new_testament", "old_testament", "bible"
+reading_mode = "evangelion"
+
+[tui]
+  # Whether to show the quit message "Press q to quit..."
+  show_quit_message = true
+  
+  # Box border style: "rounded", "double", "single", or "hidden"
+  border_style = "rounded"
+
+[formatter]
+  # Whether to use ANSI colours in formatted output mode
+  use_colours = true
+  
+  # Header format template
+  # Available variables: {book}, {chapter}, {first_verse}, {second_verse}
+  header_format = "{book} {chapter}\\nw. {first_verse}-{second_verse}"
+  
+  # Whether to print each verse on a numbered line with verse number
+  numbered = false
+  
+  # Whether to render pilcrows (¶) as blank lines instead of ignoring them
+  paragraphs = false
+
+[date_progression]
+  # Number of verses to read per day
+  verses_per_day = 12
+  
+  # Start date for yearly progression (format: "1 January")
+  # Empty means 1 January of current year
+  start_date = ""
+
+# Easter type: "orthodox" (default) or "latin" (i.e., roman catholic)
+easter_type = "orthodox"
+.RE
+.fi
+.PP
+To generate a default configuration file, run:
+.PP
+.RS
+.B bibel \-\-generate\-config
+.RE
+.SH ALGORITHM
+.B bibel
+uses a date-based algorithm to determine daily readings:
+.IP 1. 4
+Calculate day of year (1-366 for non-leap years, 1-367 for leap years)
+.IP 2. 4
+Compute verse offset: \fIoffset = (day_of_year - 1) × verses_per_day\fR
+(default verses_per_day = 12)
+.IP 3. 4
+Apply modulo with total verses in selected reading mode to cycle yearly.
+For evangelion mode: total verses = 3779
+.IP 4. 4
+Walk through books in selected range to find corresponding verses
+.IP 5. 4
+Apply lookahead rule: if less than \fIverses_per_day\fR verses remain in chapter
+after current snippet, extend to end of chapter
+.PP
+Book ranges for reading modes:
+.TS
+tab(;) allbox;
+l l l.
+Reading Mode;Start Book;End Book
+evangelion;40 (Matthew);43 (John)
+new_testament;40 (Matthew);66 (Revelation)
+old_testament;1 (Genesis);39 (Malachi)
+bible;1 (Genesis);66 (Revelation)
+.TE
+.SH JSON SCHEMA
+.PP
+A JSON file is used to read a Bible. The Bible has to follow this structure:
+.PP
+.nf
+.RS
+{
+  "metadata": { ... },
+  "verses": [
+    {
+      "book_name": "Mateusza",
+      "book": 40,
+      "chapter": 1,
+      "verse": 1,
+      "text": "¶ KSIĘGA początku Jezusa Chrystusa..."
+    },
+    ...
+  ]
+}
+.RE
+.fi
+.SH EASTER CALCULATIONS
+The TUI displays a progress bar showing time until the next Easter:
+.IP \(bu 3
+\fBOrthodox Easter\fR (default): Calculated using Meeus Julian algorithm,
+accurate for years after 325 AD.
+.IP \(bu 3
+\fBRoman Catholic Easter\fR (with \fB\-l\fR flag): Calculated using Delambre
+and Butcher's algorithm for Gregorian calendar.
+.PP
+The progress bar shows:
+.IP \(bu 3
+Visual segments (█) representing percentage of annual cycle between consecutive
+Easters
+.IP \(bu 3
+Exact days, hours, and minutes until next Easter
+.IP \(bu 3
+Real-time updates while TUI is running
+.SH EXAMPLES
+.TP
+.B bibel
+Default TUI mode with interactive display showing Orthodox Easter progress.
+.TP
+.B bibel \-\-latin
+Roman Catholic Easter progress bar instead of Orthodox.
+.TP
+.B bibel \-\-plain
+Plain text output without formatting or TUI.
+.TP
+.B bibel \-\-formatted
+Formatted output with ANSI colours.
+.TP
+.B bibel \-\-numbered
+Numbered verses (each verse on its own line with verse number).
+.TP
+.B bibel \-\-paragraphs
+Paragraph mode (pilcrows render as blank lines).
+.TP
+.B bibel \-\-numbered \-\-paragraphs
+Combine numbered and paragraph modes.
+.TP
+.B bibel \-\-plain \-\-numbered
+Plain output with numbered verses.
+.TP
+.B bibel \-\-generate\-config
+Generate a default configuration file.
+.TP
+.B bibel \-\-reading new_testament \-\-formatted
+Formatted output from New Testament.
+.TP
+.B bibel \-\-reading bible \-\-plain
+Plain text output from entire Bible.
+.SH FILES
+.TP
+.B $XDG_CONFIG_HOME/bibel/config.toml
+Configuration file (default: ~/.config/bibel/config.toml).
+.TP
+.B $XDG_DATA_HOME/bibel/
+Directory for Bible JSON files (default: ~/.local/share/bibel/).
+.TP
+.B ./books/pol_nbg.json
+Default Bible data file (Polish New Bible translation).
+.TP
+.B ./configs/config.example.toml
+Example configuration file.
+.SH EXIT STATUS
+.PP
+.B bibel
+exits with:
+.TP
+.B 0
+on successful operation.
+.TP
+.B 1
+on configuration error, Bible data loading failure, or calculation error.
+.SH ENVIRONMENT
+.TP
+.B XDG_CONFIG_HOME
+Base directory for user-specific configuration files. Defaults to ~/.config.
+.TP
+.B XDG_DATA_HOME
+Base directory for user-specific data files. Defaults to ~/.local/share.
+.TP
+.B TERM
+Terminal type. Used for determining TUI capabilities and colour support.
+.SH BUGS
+Report issues at the project repository.
+.SH SEE ALSO
+.PP
+.UR https://github.com/charmbracelet/bubbletea
+bubbletea(1)
+.UE ,
+.UR https://github.com/charmbracelet/lipgloss
+lipgloss(1)
+.UE ,
+.UR https://github.com/spf13/viper
+viper(1)
+.UE ,
+.UR https://github.com/alexflint/go-arg
+go\-arg(1)
+.UE ,
+.UR https://github.com/adrg/xdg
+xdg(1)
+.UE
+.PP
+.UR https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+European Union Public Licence 1.2
+.UE
+.PP
+.SH AUTHORS
+Maxwell Jensen <maxwelljensen@posteo.net>
+.PP
+Project repository:
+.UR https://codeberg.org/maxwelljens/bibel
+codeberg.org/maxwelljens/bibel
+.UE
+.SH COPYRIGHT
+Copyright \(co 2026 Maxwell Jensen.
+.br
+This program is licensed under the European Union Public Licence 1.2.

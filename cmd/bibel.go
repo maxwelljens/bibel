@@ -47,7 +47,7 @@ func main() {
 	}
 
 	// Load configuration
-	config, err := bible.LoadConfig(args.Verbose)
+	config, err := bible.LoadConfig(args.ConfigPath, args.Verbose)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 		os.Exit(1)
@@ -82,9 +82,26 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Handle plain output mode
-	if args.Plain {
-		formatter := bible.NewFormatter(bibleData)
+			// Determine output mode: plain, formatted, or TUI
+	// Plain mode forces no colours, formatted respects config
+	usePlain := args.Plain
+	useFormatted := args.Formatted
+
+	// If no explicit mode but numbered/paragraphs flags are set, use formatted mode
+	if !usePlain && !useFormatted && (args.Numbered || args.Paragraphs) {
+		useFormatted = true
+	}
+
+	// If we're outputting text (plain or formatted)
+	if usePlain || useFormatted {
+		// Determine colours: plain mode = false, formatted mode = from config
+		useColours := false
+		if useFormatted {
+			useColours = config.Formatter.UseColours
+		}
+
+		// Create formatter with appropriate settings
+		formatter := bible.NewFormatterWithFullConfig(bibleData, useColours, config.Formatter.HeaderFormat, args.Numbered, args.Paragraphs)
 		header := formatter.FormatHeader(bookmark)
 		content := formatter.ExtractAndFormat(bibleData, bookmark)
 		fmt.Println(header)
@@ -92,27 +109,7 @@ func main() {
 		return
 	}
 
-	// Handle formatted output mode
-	if args.Formatted {
-		formatter := bible.NewFormatterWithConfig(bibleData, config.Formatter.UseColours, config.Formatter.HeaderFormat)
-		header := formatter.FormatHeader(bookmark)
-		content := formatter.ExtractAndFormat(bibleData, bookmark)
-		fmt.Println(header)
-		fmt.Println(content)
-		return
-	}
-
-	// Handle numbered/paragraph options
-	if args.Numbered || args.Paragraphs {
-		formatter := bible.NewFormatterWithFullConfig(bibleData, config.Formatter.UseColours, config.Formatter.HeaderFormat, args.Numbered, args.Paragraphs)
-		header := formatter.FormatHeader(bookmark)
-		content := formatter.ExtractAndFormat(bibleData, bookmark)
-		fmt.Println(header)
-		fmt.Println(content)
-		return
-	}
-
-	// Default: TUI mode
+	// Default: TUI mode (no plain or formatted flags)
 	// Check if we're in a terminal
 	if !term.IsTerminal(int(os.Stdin.Fd())) {
 		fmt.Fprintln(os.Stderr, "Error: Standard input is not a terminal. Use --plain or --formatted for non-interactive output.")

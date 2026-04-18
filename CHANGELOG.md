@@ -8,6 +8,32 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-04-18
+
+### Added
+
+- **Comprehensive `man` page**: `bibel.1` with 15 sections that should cover
+all aspects of the program
+
+### Changed
+
+- **Revised documentation**: `README.md` updated to a more concise page (80
+lines, was ~245)
+
+### Fixed
+
+- **Output mode distinction**: Plain (`-p/--plain`) and formatted
+(`-f/--formatted`) modes now behave correctly:
+  - Plain mode forces `useColours = false` for true plain text output
+  - Formatted mode respects `config.Formatter.UseColours` setting
+- **Formatter logic**: Restructured to handle all flag combinations (`-p
+--numbered`, `-f --numbered`, etc.)
+- `-p/--plain` and `-f/--formatted` previously operated identically (both with
+ANSI colours)
+- `--config` flag existed but didn't actually load custom config files
+- Fixed part where `--numbered` flag alone didn't trigger formatted output mode
+- Edge cases with flag combinations (`-p --numbered`, `-f --paragraphs`)
+
 ## [0.11.0] - 2026-04-18
 
 ### Added
