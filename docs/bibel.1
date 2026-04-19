@@ -159,25 +159,108 @@ bible;1 (Genesis);66 (Revelation)
 .TE
 .SH JSON SCHEMA
 .PP
-A JSON file is used to read a Bible. The Bible has to follow this structure:
+The Bible data file used by \fBbibel\fR must be a JSON file following a specific
+schema designed for efficient, deterministic processing. The schema is used by
+the JSON Bibles repository
+.RI ( https://codeberg.org/maxwelljensen/bible-json/ )
+and can be adapted for any translation.
+.PP
+Every Bible file consists of a top\-level object with two fields:
 .PP
 .nf
 .RS
 {
   "metadata": { ... },
-  "verses": [
-    {
-      "book_name": "Mateusza",
-      "book": 40,
-      "chapter": 1,
-      "verse": 1,
-      "text": "¶ KSIĘGA początku Jezusa Chrystusa..."
-    },
-    ...
-  ]
+  "verses": [ ... ]
 }
 .RE
 .fi
+.PP
+.IP \(bu 3
+\fBmetadata\fR: an object that may contain information about the translation
+(name, copyright, language, source, etc.). Its exact content is not used by
+\fBbibel\fR but is preserved for provenance.
+.IP \(bu 3
+\fBverses\fR: an array of verse objects, each representing a single verse of
+the Bible. The array is ordered canonically (Genesis 1:1 through Revelation 22:21).
+Each verse object has the following fields:
+.PP
+.TS
+tab(;) allbox;
+l l l.
+Field;Type;Description
+_
+\fBbook_name\fR;string;Full name of the book (e.g., "Mateusza", "John", "Genesis")
+\fBbook\fR;integer;Standard Protestant book number (1 = Genesis, 40 = Matthew, 66 = Revelation)
+\fBchapter\fR;integer;Chapter number within the book
+\fBverse\fR;integer;Verse number within the chapter
+\fBtext\fR;string;The verse text. May contain the pilcrow character ¶ to indicate paragraph breaks.
+.TE
+.PP
+Example entry from \fIpol_nbg.json\fR:
+.PP
+.nf
+.RS
+{
+  "book_name": "Mateusza",
+  "book": 40,
+  "chapter": 1,
+  "verse": 1,
+  "text": "¶ KSIĘGA początku Jezusa Chrystusa, syna Dawida, syna Abrahama."
+}
+.RE
+.fi
+.SS Why this schema?
+.PP
+The schema supports the specific needs of \fBbibel\fR (and similar date‑based
+readers) while keeping the files simple and reusable.
+.PP
+\fBGlobal verse offset\fR
+.RS
+\fBbibel\fR calculates a daily reading position as a global verse offset:
+.PP
+.nf
+offset = (day_of_year - 1) * verses_per_day   (mod total_verses)
+.fi
+.PP
+Because the \fBverses\fR array is flat and ordered canonically, the program can
+immediately jump to the verse at index \fIoffset\fR without traversing nested
+chapters or books. This makes the lookup O(1) in practice.
+.RE
+.PP
+\fBRedundant \fBbook\fB number: fast filtering by testament\fR
+.RS
+Having a numeric \fBbook\fR field (1‑66) allows \fBbibel\fR to efficiently select
+a range of books for different reading modes:
+.PP
+.TS
+tab(;) allbox;
+l l.
+Reading Mode;Book Range
+_
+evangelion;40–43 (Matthew through John)
+new_testament;40–66 (Matthew through Revelation)
+old_testament;1–39 (Genesis through Malachi)
+bible;1–66 (entire Bible)
+.TE
+.PP
+Without the numeric \fBbook\fR field, the program would need to compare string
+names or parse a separate book index, which is slower and more error‑prone
+across different languages.
+.RE
+.PP
+\fBPilcrow (¶) for optional paragraph rendering\fR
+.RS
+Many Bible translations include the pilcrow character ¶ as an inline marker for
+paragraph beginnings. \fBbibel\fR offers a \fB\-\-paragraphs\fR (\fB\-g\fR) flag
+that turns each pilcrow into a blank line instead of ignoring it. This keeps the
+raw text clean (no extra markup) while allowing optional formatting at display
+time.
+.RE
+.PP
+The schema is a direct export format from Bible SuperSearch
+.RI ( https://www.biblesupersearch.com/bible-downloads/ ),
+ensuring compatibility and ease of generation.
 .SH EASTER CALCULATIONS
 The TUI displays a progress bar showing time until the next Easter:
 .IP \(bu 3
@@ -193,8 +276,6 @@ Visual segments (█) representing percentage of annual cycle between consecutiv
 Easters
 .IP \(bu 3
 Exact days, hours, and minutes until next Easter
-.IP \(bu 3
-Real-time updates while TUI is running
 .SH EXAMPLES
 .TP
 .B bibel

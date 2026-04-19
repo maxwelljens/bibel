@@ -100,6 +100,15 @@ Build with:
 
     go build ./cmd/bibel.go
 
+### And the Bible?
+
+Though Bibles in the exact JSON format that `bibel` expects are not found lying
+around the web everywhere, I have compiled a collection of (mainly Protestant)
+Bibles in this exact JSON format over at the
+[`json_bibles`](https://codeberg.org/maxwelljensen/json_bibles) repository.
+This has been helpfully provided by [Bible
+SuperSearch](https://www.biblesupersearch.com/bible-downloads/).
+
 ## Documentation
 
 For more specific information, refer to the `man` page located at
