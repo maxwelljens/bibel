@@ -2,6 +2,9 @@
 
 ![screenshot](/assets/screenshot.svg)
 
+![Codeberg Release](https://img.shields.io/gitea/v/release/maxwelljensen/bibel?gitea_url=https%3A%2F%2Fcodeberg.org&style=for-the-badge)
+![Codeberg Licence](assets/eupl-12-badge.svg)
+
 ---
 
 ## What is bibel?
