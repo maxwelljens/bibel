@@ -61,6 +61,18 @@ func main() {
 	// Override reading mode from command line if specified
 	if args.Reading != "" {
 		config.ReadingMode = args.Reading
+
+		// Validate reading mode after command line override
+		validReadingModes := map[string]bool{
+			"evangelion":    true,
+			"new_testament": true,
+			"old_testament": true,
+			"bible":         true,
+		}
+		if config.ReadingMode != "" && !validReadingModes[config.ReadingMode] {
+			fmt.Fprintf(os.Stderr, "Error: invalid reading mode: %s, must be one of: evangelion, new_testament, old_testament, bible\n", config.ReadingMode)
+			os.Exit(1)
+		}
 	}
 
 	// Load Bible data
@@ -73,7 +85,8 @@ func main() {
 	// Create date progression calculator
 	// We need to convert reading mode string to ReadingMode type
 	// Based on verse.go, ReadingMode is a string type with constants
-	dateProg := bible.NewDateProgression(bibleData)
+	// Create date progression calculator with reading mode from config
+	dateProg := bible.NewDateProgressionWithReadingMode(bibleData, config.DateProgression.VersesPerDay, bible.ReadingMode(config.ReadingMode))
 
 	// Get today's bookmark
 	bookmark, err := dateProg.GetPositionForDate(time.Now())
@@ -82,7 +95,7 @@ func main() {
 		os.Exit(1)
 	}
 
-			// Determine output mode: plain, formatted, or TUI
+	// Determine output mode: plain, formatted, or TUI
 	// Plain mode forces no colours, formatted respects config
 	usePlain := args.Plain
 	useFormatted := args.Formatted
@@ -123,3 +136,4 @@ func main() {
 		os.Exit(1)
 	}
 }
+

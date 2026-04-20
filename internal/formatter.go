@@ -121,14 +121,14 @@ func (f *Formatter) FormatSnippetWithOptions(verses []*Verse) string {
 		// Check for pilcrow to handle paragraph breaks
 		text := strings.TrimSpace(verse.Text)
 		hasPilcrow := strings.HasPrefix(text, "¶ ") || strings.HasPrefix(text, "¶")
-		
+
 		// Remove pilcrow markers if present
 		if strings.HasPrefix(text, "¶ ") {
 			text = text[2:]
 		} else if strings.HasPrefix(text, "¶") {
 			text = text[1:]
 		}
-		
+
 		// Handle paragraph breaks (blank line before verse with pilcrow)
 		if f.paragraphs && hasPilcrow && i > 0 {
 			// Add blank line before this verse (paragraph break)
@@ -144,14 +144,14 @@ func (f *Formatter) FormatSnippetWithOptions(verses []*Verse) string {
 				}
 			}
 		}
-		
+
 		// Handle numbered output
 		if f.numbered {
 			if i > 0 && !(f.paragraphs && hasPilcrow) {
 				// Don't add newline if we already added one for paragraph
 				sb.WriteString("\n")
 			}
-			sb.WriteString(fmt.Sprintf("%d. %s", verse.VerseNum, text))
+			fmt.Fprintf(&sb, "%d. %s", verse.VerseNum, text)
 		} else {
 			// Regular mode - join with spaces
 			// Don't add space if we just added paragraph break
@@ -172,34 +172,34 @@ func (f *Formatter) FormatSnippetForTUI(verses []*Verse, style lipgloss.Style, n
 	}
 
 	var resultLines []string
-	
+
 	for i, verse := range verses {
 		// Process verse text
 		text := strings.TrimSpace(verse.Text)
 		hasPilcrow := strings.HasPrefix(text, "¶ ") || strings.HasPrefix(text, "¶")
-		
+
 		// Remove pilcrow markers if present
 		if strings.HasPrefix(text, "¶ ") {
 			text = text[2:]
 		} else if strings.HasPrefix(text, "¶") {
 			text = text[1:]
 		}
-		
+
 		// Handle paragraph breaks (blank line before verse with pilcrow)
 		if f.paragraphs && hasPilcrow && i > 0 {
 			// Add blank line before this verse (paragraph break)
 			resultLines = append(resultLines, "")
 		}
-		
+
 		if f.numbered {
 			// For numbered mode: "1. text"
 			// Estimate number takes about 4 characters (for verse numbers up to 3 digits + ". ")
 			const numberWidthEstimate = 4
-			remainingWidth := max(1, contentWidth - numberWidthEstimate)
-			
+			remainingWidth := max(1, contentWidth-numberWidthEstimate)
+
 			numberPart := numberStyle.Render(fmt.Sprintf("%d. ", verse.VerseNum))
 			textPart := style.Width(remainingWidth).Render(text)
-			resultLines = append(resultLines, numberPart + textPart)
+			resultLines = append(resultLines, numberPart+textPart)
 		} else {
 			// For non-numbered mode, we'll handle text accumulation separately
 			// Store plain text for now, will join and render later
@@ -212,16 +212,16 @@ func (f *Formatter) FormatSnippetForTUI(verses []*Verse, style lipgloss.Style, n
 			}
 		}
 	}
-	
+
 	// Apply styling to non-numbered lines
 	if !f.numbered {
 		for i, line := range resultLines {
-			if line != "" {  // Keep empty lines (paragraph breaks) as is
+			if line != "" { // Keep empty lines (paragraph breaks) as is
 				resultLines[i] = style.Width(contentWidth).Render(line)
 			}
 		}
 	}
-	
+
 	return strings.Join(resultLines, "\n")
 }
 
@@ -237,11 +237,4 @@ func (f *Formatter) ExtractAndFormatWithHeader(bible *Bible, bookmark *Bookmark)
 	header := f.FormatHeader(bookmark)
 	content := f.ExtractAndFormat(bible, bookmark)
 	return header + "\n" + content
-}
-// max returns the larger of two integers
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }

@@ -8,6 +8,14 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-04-20
+
+### Fixed
+
+- Fixed syntax error in `cmd/bibel.go` where closing brace for reading mode
+validation was misplaced, preventing `-r/--reading` command line option from
+taking effect
+
 ## [1.0.0] - 2026-04-18
 
 ### Added
