@@ -2,6 +2,7 @@ package bible
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -57,9 +58,9 @@ func (f *Formatter) FormatHeader(bookmark *Bookmark) string {
 	// Replace template variables
 	result := template
 	result = strings.ReplaceAll(result, "{book}", bookName)
-	result = strings.ReplaceAll(result, "{chapter}", fmt.Sprintf("%d", bookmark.Chapter))
-	result = strings.ReplaceAll(result, "{first_verse}", fmt.Sprintf("%d", bookmark.FirstVerse))
-	result = strings.ReplaceAll(result, "{second_verse}", fmt.Sprintf("%d", bookmark.SecondVerse))
+	result = strings.ReplaceAll(result, "{chapter}", strconv.Itoa(bookmark.Chapter))
+	result = strings.ReplaceAll(result, "{first_verse}", strconv.Itoa(bookmark.FirstVerse))
+	result = strings.ReplaceAll(result, "{second_verse}", strconv.Itoa(bookmark.SecondVerse))
 
 	if !f.useColours {
 		return result
@@ -147,7 +148,7 @@ func (f *Formatter) FormatSnippetWithOptions(verses []*Verse) string {
 
 		// Handle numbered output
 		if f.numbered {
-			if i > 0 && !(f.paragraphs && hasPilcrow) {
+			if i > 0 && (!f.paragraphs || !hasPilcrow) {
 				// Don't add newline if we already added one for paragraph
 				sb.WriteString("\n")
 			}
@@ -155,7 +156,7 @@ func (f *Formatter) FormatSnippetWithOptions(verses []*Verse) string {
 		} else {
 			// Regular mode - join with spaces
 			// Don't add space if we just added paragraph break
-			if i > 0 && !(f.paragraphs && hasPilcrow) {
+			if i > 0 && (!f.paragraphs || !hasPilcrow) {
 				sb.WriteString(" ")
 			}
 			sb.WriteString(text)

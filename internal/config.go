@@ -1,6 +1,7 @@
 package bible
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -145,7 +146,8 @@ func LoadConfig(configPath string, verbose bool) (*Config, error) {
 
 	// Read in config file (if it exists)
 	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+		var cfgErr viper.ConfigFileNotFoundError
+		if errors.As(err, &cfgErr) {
 			// Config file not found; we'll use defaults
 			if configPath != "" {
 				logger.Info("No configuration file found at %s", configPath)

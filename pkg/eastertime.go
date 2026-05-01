@@ -34,7 +34,6 @@ package eastertime
 
 import (
 	"errors"
-	"math"
 	"time"
 )
 
@@ -91,7 +90,7 @@ func OrthodoxByYear(year int) (time.Time, error) {
 
 	var a, b, c, d, e int
 	var month time.Month
-	var day float64
+	var day int
 
 	a = year % 4
 	b = year % 7
@@ -99,8 +98,8 @@ func OrthodoxByYear(year int) (time.Time, error) {
 	d = (19*c + 15) % 30
 	e = (2*a + 4*b - d + 34) % 7
 	month = time.Month((d + e + 114) / 31)
-	day = math.Floor(float64((d+e+114)%31 + 1))
-	day = day + 13
+	day = (d+e+114)%31 + 1
+	day += 13
 
-	return time.Date(year, month, int(day), 0, 0, 0, 0, time.Local), nil
+	return time.Date(year, month, day, 0, 0, 0, 0, time.Local), nil
 }

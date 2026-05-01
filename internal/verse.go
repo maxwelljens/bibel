@@ -24,7 +24,7 @@ type VerseRange struct {
 // BookIndex represents Bible book numbers
 type BookIndex int
 
-// BookIndex.String returns the string representation of the book index.
+// String returns the string representation of the book index.
 // Note: The actual book name should be retrieved from Bible data using the Formatter.
 // This is kept for backward compatibility but returns a simple numeric representation.
 func (b BookIndex) String() string {

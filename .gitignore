@@ -1,11 +1,11 @@
 # Binaries for programs and plugins
 bibel
-bibel*linux
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+dist/
 
 # Test binary, built with `go test -c`
 *.test
@@ -27,4 +27,4 @@ go.work.sum
 .env
 
 # Honk
-.goosehints
+AGENTS.md

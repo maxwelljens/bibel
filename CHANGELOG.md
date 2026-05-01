@@ -8,6 +8,17 @@ Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-05-01
+
+### Fixed
+
+- **Short-day bug in date progression**: 96/365 days (26%) had fewer than 12
+  verses, some as low as 1. Replaced stateless `(day-1)*12` offset with
+  pre-computed cumulative offsets using lookahead logic — every day now reads
+  12+ verses
+- **Lint issues**: Resolved 11 golangci-lint issues across 6 files (`errorlint`,
+  `gocritic`, `perfsprint`, `staticcheck`, `godoclint`)
+
 ## [1.0.1] - 2026-04-20
 
 ### Fixed

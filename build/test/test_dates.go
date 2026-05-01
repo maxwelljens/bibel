@@ -39,15 +39,16 @@ func main() {
 			expectedStartVerse: 1,
 			expectedEndVerse:   12,
 		},
-		// Day 110 (20 April, 2026) - based on current output
+		// Day 110 (20 April, 2026) - Mark 12:1-12
+		// With cumulative lookahead, all days read 12+ verses and no short days occur.
 		{
 			name:               "Day 110 - evangelion",
 			date:               time.Date(2026, 4, 20, 0, 0, 0, 0, time.UTC),
 			readingMode:        bible.ReadingModeEvangelion,
 			expectedBook:       41, // Mark
-			expectedChapter:    6,
-			expectedStartVerse: 46,
-			expectedEndVerse:   56,
+			expectedChapter:    12,
+			expectedStartVerse: 1,
+			expectedEndVerse:   12,
 		},
 		// Test New Testament mode - should also start at Matthew 1:1-12
 		{
@@ -71,16 +72,16 @@ func main() {
 		},
 		// Test wrap-around: Day that would exceed total Gospel verses
 		// 3779 verses / 12 verses/day = ~315 days
-		// Day 316 should wrap back to near beginning (offset = (316-1)*12 = 3780, modulo 3779 = 1)
-		// So should be Matthew 1:2-13
+		// With cumulative lookahead, extra verses consumed on chapter-boundary
+		// days push the schedule further, so day 316 lands in Matthew 18.
 		{
 			name:               "Day 316 - evangelion (wrap test)",
 			date:               time.Date(2026, 11, 12, 0, 0, 0, 0, time.UTC), // Day 316
 			readingMode:        bible.ReadingModeEvangelion,
 			expectedBook:       40,
-			expectedChapter:    1,
-			expectedStartVerse: 2,
-			expectedEndVerse:   13,
+			expectedChapter:    18,
+			expectedStartVerse: 1,
+			expectedEndVerse:   12,
 		},
 	}
 

@@ -1,0 +1,16 @@
+version: "2"
+
+linters:
+  enable:
+    - errcheck # checking for unchecked errors, these unchecked errors can be critical bugs in some cases
+    - govet # reports suspicious constructs, such as Printf calls whose arguments do not align with the format string
+    - usetesting # reports uses of functions with replacement inside the testing package
+    - perfsprint # checks that fmt.Sprintf can be replaced with a faster alternative
+    - unused # checks for unused constants, variables, functions and types
+    - gocritic # provides diagnostics that check for bugs, performance and style issues
+    - staticcheck # is a go vet on steroids, applying a ton of static analysis checks
+    - godoclint # checks Golang's documentation practice
+    - errorlint # finds code that will cause problems with the error wrapping scheme introduced in Go 1.13
+    - recvcheck # checks for receiver type consistency
+    - unparam # reports unused function parameters
+    - usestdlibvars # detects the possibility to use variables/constants from the Go standard library

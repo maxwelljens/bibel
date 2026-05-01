@@ -88,11 +88,12 @@ func (ep *EasterProgression) FormatEasterProgress() (string, error) {
 		label = "Easter"
 	}
 
-	if days > 0 {
+	switch {
+	case days > 0:
 		return fmt.Sprintf("%s in %d days, %d hours, %d minutes", label, days, hours, minutes), nil
-	} else if hours > 0 {
+	case hours > 0:
 		return fmt.Sprintf("%s in %d hours, %d minutes", label, hours, minutes), nil
-	} else {
+	default:
 		return fmt.Sprintf("%s in %d minutes", label, minutes), nil
 	}
 }
